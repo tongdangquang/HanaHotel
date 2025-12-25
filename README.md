@@ -19,7 +19,7 @@ The system includes the following main components:
 
 ### Technical Information
 
-- Language: C# 12  
+- Language: C# 
 - Platform: .NET 8  
 - Architecture: Razor Pages + Web API  
 - ORM: Entity Framework Core  
