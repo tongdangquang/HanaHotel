@@ -1,0 +1,31 @@
+﻿@model Tuple<Dictionary<string, string>, List<string>, List<string>>
+
+@{
+    var colors = Model.Item2;
+    var icons = Model.Item3;
+    int index = 0;
+
+    var currentDate = DateTime.Now;
+    var startMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
+    var endMonth = startMonth.AddMonths(-1); 
+    var formattedDate = $"{endMonth.ToString("MMM")} - {startMonth.ToString("MMM")} {currentDate.Year}";
+}
+
+<div class="row">
+    @foreach (var item in Model.Item1)
+    {
+        <div class="col-lg-3 col-sm-6">
+            <div class="card @colors[index % colors.Count]">
+                <div class="card-body">
+                    <h3 class="card-title text-white">@item.Key</h3>
+                    <div class="d-inline-block">
+                        <h2 class="text-white">@item.Value</h2>
+                        <p class="text-white mb-0">@formattedDate</p> 
+                    </div>
+                    <span class="float-right display-5 opacity-5"><i class="fa @icons[index % icons.Count]"></i></span>
+                </div>
+            </div>
+        </div>
+        index++;
+    }
+</div>

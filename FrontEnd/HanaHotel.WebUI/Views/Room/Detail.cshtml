@@ -1,0 +1,210 @@
+﻿@model HanaHotel.WebUI.DTOs.RoomDTO.ResultRoomDTO
+@{
+    Layout = null;
+    var images = Model.ImagePaths ?? new List<string>();
+    var carouselId = $"roomCarousel-{Model.Id}";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+
+@await Component.InvokeAsync("_HeadPartial")
+
+<body>
+    <div class="container-xxl bg-white p-0">
+
+        @await Component.InvokeAsync("_SpinnerPartial")
+        @await Component.InvokeAsync("_NavbarPartial")
+
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top" title="Lên đầu trang">
+            <i class="bi bi-arrow-up"></i>
+        </a>
+
+        <div class="container my-5">
+            <div class="card shadow-lg border-0">
+                <div class="row g-0">
+                    <!-- Carousel hình -->
+                    <div class="col-md-6">
+                        @if (images.Any())
+                        {
+                            <div id="@carouselId" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-indicators">
+                                    @for (int i = 0; i < images.Count; i++)
+                                    {
+                                        <button type="button" data-bs-target="#@carouselId" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")" aria-label="Slide @(i + 1)"></button>
+                                    }
+                                </div>
+                                <div class="carousel-inner" style="height:400px;">
+                                    @for (int i = 0; i < images.Count; i++)
+                                    {
+                                        var img = images[i];
+                                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                                            <img src="/@Url.Content(img)" class="d-block w-100" alt="@Model.RoomName" style="height:400px; object-fit:cover;">
+                                        </div>
+                                    }
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#@carouselId" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#@carouselId" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+
+                            <!-- Thumbnails -->
+                            <div class="mt-3 d-flex gap-2 flex-wrap">
+                                @for (int i = 0; i < images.Count; i++)
+                                {
+                                    <img src="/@Url.Content(images[i])" class="thumb img-thumbnail" data-index="@i" style="width:75px; height:56px; object-fit:cover; cursor:pointer;" />
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <img src="~/hotel-html-template/img/room-placeholder.jpg" class="d-block w-100" alt="@Model.RoomName" style="height:400px; object-fit:cover;">
+                        }
+                    </div>
+
+                    <!-- Thông tin phòng -->
+                    <div class="col-md-6">
+                        <div class="card-body d-flex flex-column h-100">
+                            <!-- Tên phòng -->
+                            <h2 class="card-title fw-bold mb-3">@Model.RoomName</h2>
+
+                            <!-- Giá phòng & khuyến mại -->
+                            @{
+                                decimal discountedPrice = Model.Price;
+                                bool hasPromotion = !string.IsNullOrEmpty(Model.PromotionName) &&
+                                ((Model.PromotionDiscountPercent.HasValue && Model.PromotionDiscountPercent.Value > 0) ||
+                                (Model.PromotionDiscountAmount.HasValue && Model.PromotionDiscountAmount.Value > 0));
+
+                                if (hasPromotion)
+                                {
+                                    if (Model.PromotionDiscountPercent.HasValue && Model.PromotionDiscountPercent.Value > 0)
+                                    {
+                                        discountedPrice = Model.Price * (1 - Model.PromotionDiscountPercent.Value / 100);
+                                    }
+                                    else if (Model.PromotionDiscountAmount.HasValue && Model.PromotionDiscountAmount.Value > 0)
+                                    {
+                                        discountedPrice = Model.Price - Model.PromotionDiscountAmount.Value;
+                                    }
+                                }
+                            }
+
+                            <div class="mb-3">
+                                @if (hasPromotion)
+                                {
+                                    <div class="d-flex align-items-center mb-1">
+                                        <span class="text-muted text-decoration-line-through fs-5">@($"{Model.Price:N0} đ")</span>
+                                        @if (Model.PromotionDiscountPercent.HasValue && Model.PromotionDiscountPercent.Value > 0)
+                                        {
+                                            <span class="ms-2 text-danger fw-bold fs-6">-@Model.PromotionDiscountPercent.Value %</span>
+                                        }
+                                        else if (Model.PromotionDiscountAmount.HasValue && Model.PromotionDiscountAmount.Value > 0)
+                                        {
+                                            <span class="ms-2 text-danger fw-bold fs-6">-@Model.PromotionDiscountAmount.Value:N0 đ</span>
+                                        }
+                                    </div>
+
+                                    <div class="mb-2 fs-3 fw-bold text-primary">
+                                        @discountedPrice.ToString("N0") đ/Đêm
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p class="mb-3 text-primary fw-bold fs-5">
+                                        @($"{Model.Price:N0} đ") <small class="text-muted">/Đêm</small>
+                                    </p>
+                                }
+                            </div>
+
+                            <!-- Thông tin chi tiết -->
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <i class="fas fa-bed icon-lux"></i>
+                                    <span class="room-label">Số giường:</span> @Model.BedCount
+                                </div>
+
+                            @* <!-- Mô tả -->
+                            <p class="card-text mb-3"><strong>Mô tả:</strong> @Model.Description</p> *@
+
+                            <!-- Dịch vụ -->
+                            @if (Model.Services != null && Model.Services.Any())
+                            {
+                                <div class="mb-3">
+                                    <strong>Dịch vụ:</strong>
+                                    <ul class="mt-1 mb-0 ps-3">
+                                        @foreach (var s in Model.Services)
+                                        {
+                                            <li>@s</li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            <!-- Mô tả -->
+                            <p class="card-text mb-3"><strong>Mô tả:</strong> @Model.Description</p>
+
+                            <div class="mt-4 d-flex justify-content-center">
+                                <a href="@Url.Action("Index", "Room")" class="btn btn-secondary me-2">
+                                    <i class="fas fa-arrow-left"></i> Quay lại
+                                </a>
+                                <a class="btn btn-primary ms-2" href="@Url.Action("Index", "Booking", new { roomId = Model.Id })">
+                                    <i class="fas fa-calendar-check"></i> Đặt phòng
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("_FooterPartial")
+    @await Component.InvokeAsync("_ScriptsPartial")
+
+    <script>
+        (function () {
+            var carouselEl = document.getElementById('@carouselId');
+            if (carouselEl && window.bootstrap) {
+                var carousel = bootstrap.Carousel.getOrCreateInstance(carouselEl);
+                var thumbs = document.querySelectorAll('#@carouselId .thumb');
+                thumbs.forEach(function (t) {
+                    t.addEventListener('click', function () {
+                        var idx = parseInt(t.getAttribute('data-index'));
+                        if (!isNaN(idx)) {
+                            carousel.to(idx);
+                        }
+                    });
+                });
+            }
+        })();
+    </script>
+
+    <style>
+        .card-body h2 {
+            color: #343a40;
+        }
+
+        .carousel-inner img {
+            border-radius: 0.25rem;
+        }
+
+        .btn i {
+            margin-right: 5px;
+        }
+
+        .thumb {
+            transition: transform .12s ease-in-out;
+        }
+
+            .thumb:hover {
+                transform: scale(1.05);
+            }
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+</body>
+</html>

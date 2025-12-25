@@ -1,0 +1,112 @@
+﻿@model CreateUserDTO
+@using HanaHotel.EntityLayer.Concrete
+
+@{
+    ViewData["Title"] = "Đăng ký tài khoản";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html class="h-100" lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="~/adminweb/assets/images/favicon.png">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
+    <link href="~/adminweb/css/style.css" rel="stylesheet">
+</head>
+
+<body class="h-100">
+
+    <div id="preloader">
+        <div class="loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="login-form-bg h-100">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100">
+                <div class="col-xl-6">
+                    <div class="form-input-content">
+                        <div class="card login-form mb-0">
+                            <div class="card-body pt-5">
+                                <a class="text-center" href="index.html">
+                                    <h4>Đăng ký tài khoản khách sạn</h4>
+                                </a>
+
+                                <form class="mt-5 mb-5 login-input" method="post" asp-action="Index" asp-controller="Register">
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                    <div class="form-group">
+                                        <input asp-for="Name" class="form-control" placeholder="Họ và tên" />
+                                        <span asp-validation-for="Name" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input asp-for="DateOfBirth" type="date" class="form-control" />
+                                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <select asp-for="Gender" class="form-control" asp-items="@(Html.GetEnumSelectList<GenderType>())"></select>
+                                        <span asp-validation-for="Gender" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input asp-for="UserName" class="form-control" placeholder="Tên đăng nhập" />
+                                        <span asp-validation-for="UserName" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input asp-for="Email" class="form-control" placeholder="Email" />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input asp-for="Phone" type="tel" class="form-control" placeholder="Số điện thoại" />
+                                        <span asp-validation-for="Phone" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input asp-for="Address" class="form-control" placeholder="Địa chỉ" />
+                                        <span asp-validation-for="Address" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input asp-for="Password" class="form-control" placeholder="Mật khẩu" type="password" />
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input asp-for="ConfirmPassword" class="form-control" placeholder="Xác nhận mật khẩu" type="password" />
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                    </div>
+
+                                    <button class="btn login-form__btn submit w-100" type="submit">Đăng ký</button>
+                                </form>
+
+                                <div class="text-center mt-3">
+                                    <p class="text-muted">Đã có tài khoản? <a asp-controller="Login" asp-action="Index" class="text-primary">Đăng nhập ngay</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/adminweb/plugins/common/common.min.js"></script>
+    <script src="~/adminweb/js/custom.min.js"></script>
+    <script src="~/adminweb/js/settings.js"></script>
+    <script src="~/adminweb/js/gleek.js"></script>
+    <script src="~/adminweb/js/styleSwitcher.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+[
+  {
+    "ContainingType": "HanaHotel.WebUI.Controllers.Api.VnpayController",
+    "Method": "Callback",
+    "RelativePath": "api/Vnpay/Callback",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HanaHotel.WebUI.Controllers.Api.VnpayController",
+    "Method": "Callback",
+    "RelativePath": "api/Vnpay/Callback",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]

@@ -1,0 +1,16 @@
+﻿@model HanaHotel.WebUI.Models.BookingRoomViewModel
+
+@{
+    ViewData["Title"] = "Chi tiết đặt phòng";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex mb-3">
+        <h2 class="flex-grow-1">Chi tiết đặt phòng</h2>
+        <a asp-controller="AdminBooking" asp-action="Index" class="btn btn-outline-secondary">Quay lại</a>
+    </div>
+
+    @* reuse partial for details *@
+    @await Html.PartialAsync("_BookingDetailsPartial", Model)
+</div>

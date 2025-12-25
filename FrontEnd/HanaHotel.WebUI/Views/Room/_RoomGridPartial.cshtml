@@ -1,0 +1,206 @@
+﻿@model List<HanaHotel.WebUI.DTOs.RoomDTO.ResultRoomDTO>
+
+<div class="row g-4">
+    @if (Model == null || !Model.Any())
+    {
+        <div class="col-12">
+            <div class="alert alert-secondary text-center py-4">
+                Không có loại phòng nào
+            </div>
+        </div>
+    }
+    else
+    {
+        foreach (var room in Model)
+        {
+            var images = room.ImagePaths ?? new List<string>();
+            var fallback = "hotel-html-template/hotel-html-template.jpg";
+            var carouselId = $"roomCarousel-{room.Id}";
+            <div class="col-lg-4 col-md-6">
+                <div class="room-card card shadow-sm rounded h-100 border-0">
+
+                    <!-- Hình phòng -->
+                    @if (images.Any())
+                    {
+                        <div id="@carouselId" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4500">
+                            <div class="carousel-inner rounded-top">
+                                @{
+                                    bool first = true;
+                                    foreach (var item in images)
+                                    {
+                                        var raw = item ?? "";
+                                        string src = raw.StartsWith("http") ? raw : Url.Content("~/" + raw.TrimStart('~', '/'));
+                                        <div class="carousel-item @(first ? "active" : "")">
+                                            <img src="@src"
+                                                 class="d-block w-100 room-img"
+                                                 onclick="location.href='@Url.Action("Detail","Room", new { id = room.Id })'" />
+                                        </div>
+                                        ;
+                                        first = false;
+                                    }
+                                }
+                            </div>
+
+                            @if (images.Count > 1)
+                            {
+                                <button class="carousel-control-prev" type="button" data-bs-target="#@carouselId" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon"></span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#@carouselId" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon"></span>
+                                </button>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <img src="@Url.Content("~/" + fallback)"
+                             class="room-img rounded-top"
+                             onclick="location.href='@Url.Action("Detail","Room", new { id = room.Id })'" />
+                    }
+
+                    <!-- Thông tin phòng -->
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@room.RoomName</h5>
+                       @*  <p class="card-text text-muted mb-2">@room.Description</p> *@
+                        @* Hiển thị giá và khuyến mại *@
+                        @{
+                            decimal discountedPrice = room.Price;
+                            bool hasPromotion = !string.IsNullOrEmpty(room.PromotionName) &&
+                            ((room.PromotionDiscountPercent.HasValue && room.PromotionDiscountPercent.Value > 0) ||
+                            (room.PromotionDiscountAmount.HasValue && room.PromotionDiscountAmount.Value > 0));
+
+                            if (hasPromotion)
+                            {
+                                if (room.PromotionDiscountPercent.HasValue && room.PromotionDiscountPercent.Value > 0)
+                                {
+                                    discountedPrice = room.Price * (1 - room.PromotionDiscountPercent.Value / 100);
+                                }
+                                else if (room.PromotionDiscountAmount.HasValue && room.PromotionDiscountAmount.Value > 0)
+                                {
+                                    discountedPrice = room.Price - room.PromotionDiscountAmount.Value;
+                                }
+                            }
+                        }
+
+                        <div class="d-flex flex-column fw-bold">
+                            @* Giá gốc và % hoặc tiền giảm *@
+                            @if (hasPromotion)
+                            {
+                                <div class="d-flex align-items-center mb-1">
+                                    <span class="text-muted text-decoration-line-through">@room.Price.ToString("N0") đ/Đêm</span>
+                                    @if (room.PromotionDiscountPercent.HasValue && room.PromotionDiscountPercent.Value > 0)
+                                    {
+                                        <span class="ms-2 text-danger fw-bold">-@room.PromotionDiscountPercent.Value %</span>
+                                    }
+                                    else if (room.PromotionDiscountAmount.HasValue && room.PromotionDiscountAmount.Value > 0)
+                                    {
+                                        <span class="ms-2 text-danger fw-bold">-@room.PromotionDiscountAmount.Value:N0 đ/Đêm</span>
+                                    }
+                                </div>
+
+                                @* Giá khuyến mại màu cam, to hơn *@
+                                <div class="mb-2 fs-5 fw-bold text-primary">
+                                    @discountedPrice.ToString("N0") đ/Đêm
+                                </div>
+
+                            }
+                            else
+                            {
+                                <span class="text-primary">@($"{room.Price:N0} đ")/Đêm</span>
+                            }
+                        </div>
+
+                        <p class="mb-1">Giường: @room.BedCount</p>
+                        <p class="mb-1">Kích thước: @room.Size</p>
+                        @* <p class="mb-3">Giá: @room.Price.ToString("N0") đ/đêm</p> *@
+
+
+                        @* Hiển thị Services nếu có *@
+                        @if (room.Services != null && room.Services.Any())
+                        {
+                            <div class="mb-2">
+                                Dịch vụ:
+                                <div class="mt-1">
+                                    @foreach (var s in room.Services)
+                                    {
+                                        <span class="badge bg-light text-muted me-1">@s</span>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+
+
+
+
+
+
+
+                        <div class="mt-auto">
+                            <a href="@Url.Action("Detail", "Room", new { id = room.Id })"
+                               class="btn btn-lux w-100">
+                                Xem chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+<style>
+    :root {
+        --lux-orange: #ff7a00;
+        --lux-orange-dark: #d96a27;
+    }
+
+    .room-card {
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+        .room-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 26px rgba(0,0,0,0.15);
+        }
+
+    .room-img {
+        height: 220px;
+        object-fit: cover;
+        cursor: pointer;
+    }
+
+    .icon-lux {
+        color: var(--lux-orange);
+        font-size: 17px;
+        margin-right: 6px;
+    }
+
+    .btn-lux {
+        background: var(--lux-orange);
+        border: none;
+        color: #fff;
+        padding: 10px 0;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: .2s;
+    }
+
+        .btn-lux:hover {
+            background: var(--lux-orange-dark);
+            color: #fff;
+        }
+
+    .room-desc {
+        height: 48px;
+        overflow: hidden;
+    }
+
+    .price {
+        font-size: 18px;
+    }
+
+    .carousel-inner {
+        border-radius: 8px 8px 0 0 !important;
+    }
+</style>

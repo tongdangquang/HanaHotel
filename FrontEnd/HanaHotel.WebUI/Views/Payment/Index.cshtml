@@ -1,0 +1,171 @@
+﻿@model HanaHotel.WebUI.Models.PaymentViewModel
+
+@{
+    Layout = "_Layout";
+    string FormatCurrency(decimal v) => string.Format("{0:N0} đ", v);
+}
+<!DOCTYPE html>
+<html lang="vi">
+
+@await Component.InvokeAsync("_HeadPartial")
+
+<body>
+    <div class="container-xxl bg-white p-0">
+
+        @await Component.InvokeAsync("_SpinnerPartial")
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h4 class="mb-3">Thanh toán - Mã đặt phòng #@Model.BookingId</h4>
+
+                            <div class="mb-3">
+                                <strong>Khách:</strong> @Model.FullName<br />
+                                <strong>Email:</strong> @Model.Email<br />
+                                <strong>Phone:</strong> @(Model.Phone ?? "-")<br />
+                                <strong>Nhận / Trả:</strong> @Model.CheckIn.ToString("dd/MM/yyyy") - @Model.CheckOut.ToString("dd/MM/yyyy") (@Model.Nights đêm)
+                            </div>
+
+                            <div class="mb-3">
+                                <h6>Chi tiết phòng</h6>
+                                <ul class="list-group mb-2">
+                                    @foreach (var d in Model.RoomDetails)
+                                    {
+                                        <li class="list-group-item">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <div class="fw-bold">@d.RoomName</div>
+                                                    <div class="small text-muted">Số lượng: @d.Quantity</div>
+                                                    @if (d.Services != null && d.Services.Any())
+                                                    {
+                                                        <div class="small text-muted">Dịch vụ: @string.Join(", ", d.Services)</div>
+                                                    }
+                                                    @if (!string.IsNullOrEmpty(d.PromotionName))
+                                                    {
+                                                        <div class="small text-success">Khuyến mãi: @d.PromotionName giảm @d.PromotionDiscountPercent%</div>
+                                                    }
+                                                </div>
+                                                <div class="text-end">
+                                                    @if (d.EffectiveUnitPrice < d.Price)
+                                                    {
+                                                        <div class="text-muted" style="text-decoration:line-through">@FormatCurrency(d.Price)</div>
+                                                        <div class="fw-semibold text-warning">@FormatCurrency(d.EffectiveUnitPrice) /đêm</div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="fw-semibold text-warning">@FormatCurrency(d.Price) /đêm</div>
+                                                    }
+                                                    <div class="small text-muted mt-1">@FormatCurrency(d.Subtotal)</div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                                <div class="d-flex justify-content-between">
+                                    <div>Tổng cộng</div>
+                                    <div class="fw-bold text-warning">@FormatCurrency(Model.TotalAmount)</div>
+                                </div>
+                            </div>
+
+                            <form id="paymentForm" method="post" asp-action="CreateVNPay" asp-controller="Payment">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="bookingId" value="@Model.BookingId" />
+                                <div class="mb-3">
+                                    <label class="form-label"><strong>Chọn hình thức thanh toán</strong></label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="paymentOption" id="payFull" value="full" checked>
+                                        <label class="form-check-label" for="payFull">Thanh toán toàn bộ (@FormatCurrency(Model.TotalAmount))</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="paymentOption" id="payDeposit" value="deposit">
+                                        <label class="form-check-label" for="payDeposit">Đặt cọc 50% (@FormatCurrency(Model.DepositAmount))</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <button id="submitPaymentBtn" type="button" class="btn btn-primary">Thanh toán</button>
+                                    <a asp-controller="Booking" asp-action="MyBookings" class="btn btn-link">Quay về danh sách</a>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* simple modal for confirmation *@
+        <div class="modal fade" id="paymentResultModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Kết quả thanh toán</h5>
+                    </div>
+                    <div class="modal-body" id="paymentResultBody"></div>
+                    <div class="modal-footer">
+                        <button type="button" id="paymentResultOk" class="btn btn-primary">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @await Component.InvokeAsync("_ScriptsPartial")
+        @await Component.InvokeAsync("_FooterPartial")
+    </div>
+</body>
+</html>
+
+@section Scripts {
+    <script>
+        (function () {
+            const submitBtn = document.getElementById('submitPaymentBtn');
+            const form = document.getElementById('paymentForm');
+
+            submitBtn.addEventListener('click', async function () {
+                submitBtn.disabled = true;
+
+                const formData = new FormData(form);
+                const bookingId = formData.get('bookingId');
+                const paymentOption = formData.get('paymentOption') || 'full';
+
+                try {
+                    const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+                    const token = tokenInput ? tokenInput.value : '';
+
+                    const body = new FormData();
+                    body.append('__RequestVerificationToken', token);
+                    body.append('bookingId', bookingId);
+                    body.append('paymentOption', paymentOption);
+
+                    // call server to create VNPAY payment
+                    const resp = await fetch('/Payment/CreateVNPay', {
+                        method: 'POST',
+                        body: body,
+                        credentials: 'same-origin'
+                    });
+
+                    if (!resp.ok) {
+                        const txt = await resp.text().catch(() => 'Không thể tạo giao dịch thanh toán.');
+                        alert(txt);
+                        submitBtn.disabled = false;
+                        return;
+                    }
+
+                    const json = await resp.json();
+                    if (json && json.url) {
+                        // redirect browser to VNPAY payUrl
+                        window.location.href = json.url;
+                        return;
+                    }
+
+                    alert('Lỗi khi tạo phiên thanh toán.');
+                    submitBtn.disabled = false;
+                } catch (err) {
+                    console.error(err);
+                    alert('Lỗi mạng. Vui lòng thử lại.');
+                    submitBtn.disabled = false;
+                }
+            });
+        })();
+    </script>
+}

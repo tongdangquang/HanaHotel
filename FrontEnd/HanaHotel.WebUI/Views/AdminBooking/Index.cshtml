@@ -1,0 +1,81 @@
+﻿@model List<HanaHotel.WebUI.DTOs.BookingDTO.ResultBookingDTO>
+
+@{
+    ViewData["Title"] = "Quản lý đặt phòng";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4" style="max-width: 100%;">
+    <h2 class="text-center mb-4">@ViewData["Title"]</h2>
+    <div>
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Danh sách đặt phòng</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered align-middle">
+                    <thead class="bg-dark text-white">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Họ và tên</th>
+                            <th scope="col">Số điện thoại</th>
+                            <th scope="col">Ngày đặt</th>
+                            <th scope="col">Ngày nhận phòng</th>
+                            <th scope="col">Ngày trả phòng</th>
+                            <th scope="col">Trạng thái</th>
+                            <th scope="col" class="text-center">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.FullName</td>
+                                <td>@item.Phone</td>
+                                <td>@item.BookingDate.ToString("dd/MM/yyyy")</td>
+                                <td>@item.CheckInDate.ToString("dd/MM/yyyy")</td>
+                                <td>@item.CheckOutDate.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <span class="badge @(
+                                        item.Status == HanaHotel.EntityLayer.Concrete.BookingStatus.Pending ? "bg-warning text-dark" :
+                                        item.Status == HanaHotel.EntityLayer.Concrete.BookingStatus.Deposited ? "bg-info text-dark" :
+                                        item.Status == HanaHotel.EntityLayer.Concrete.BookingStatus.Paid ? "bg-secondary text-white" :
+                                        item.Status == HanaHotel.EntityLayer.Concrete.BookingStatus.Confirmed ? "bg-success" :
+                                        item.Status == HanaHotel.EntityLayer.Concrete.BookingStatus.Cancelled ? "bg-danger" :
+                                        item.Status == HanaHotel.EntityLayer.Concrete.BookingStatus.Completed ? "bg-primary" :
+                                        "bg-secondary")">
+                                        @(
+                                            item.Status == HanaHotel.EntityLayer.Concrete.BookingStatus.Pending ? "Chờ xử lý" :
+                                            item.Status == HanaHotel.EntityLayer.Concrete.BookingStatus.Deposited ? "Đã đặt cọc" :
+                                            item.Status == HanaHotel.EntityLayer.Concrete.BookingStatus.Paid ? "Đã thanh toán" :
+                                            item.Status == HanaHotel.EntityLayer.Concrete.BookingStatus.Confirmed ? "Đã xác nhận" :
+                                            item.Status == HanaHotel.EntityLayer.Concrete.BookingStatus.Cancelled ? "Đã hủy" :
+                                            item.Status == HanaHotel.EntityLayer.Concrete.BookingStatus.Completed ? "Hoàn thành" :
+                                            "Không xác định"
+                                        )
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <a asp-controller="AdminBooking" asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm me-1" title="Xem chi tiết đặt phòng">
+                                        <i class="fa fa-eye"></i> Chi tiết
+                                    </a>
+
+                                    <a asp-controller="AdminBooking" asp-action="UpdateBooking" asp-route-id="@item.Id" class="btn btn-warning btn-sm me-1" title="Chỉnh sửa đặt phòng">
+                                        <i class="fa fa-pencil"></i> Sửa
+                                    </a>
+                                    <a asp-controller="AdminBooking" asp-action="DeleteBooking" asp-route-id="@item.Id"
+                                       class="btn btn-danger btn-sm"
+                                       title="Xóa đặt phòng"
+                                       onclick="return confirm('Bạn có chắc chắn muốn xóa đặt phòng này không?');">
+                                        <i class="fa fa-trash"></i> Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

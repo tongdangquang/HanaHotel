@@ -1,0 +1,74 @@
+﻿@model HanaHotel.WebUI.DTOs.PromotionDTO.ResultPromotionDTO
+@{
+    Layout = null;
+    var details = Model.Details ?? new List<HanaHotel.WebUI.DTOs.PromotionDetailDTO.ResultPromotionDetailDTO>();
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+
+@await Component.InvokeAsync("_HeadPartial")
+
+<body>
+    <div class="container-xxl bg-white p-0">
+
+        @await Component.InvokeAsync("_SpinnerPartial")
+        @await Component.InvokeAsync("_NavbarPartial")
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top" title="Lên đầu trang">
+            <i class="bi bi-arrow-up"></i>
+        </a>
+
+        <div class="container my-5">
+            <div class="card shadow-lg border-0">
+                <div class="row no-gutters">
+
+                    <!-- Thông tin khuyến mại -->
+                    <div class="col-md-12">
+                        <div class="card-body">
+                            <h2 class="card-title font-weight-bold mb-3">@Model.PromotionName</h2>
+                            <h4 class="text-primary mb-3">Giảm: @Model.DiscountAmount.ToString("N0") đ</h4>
+                            <p><strong>Thời gian áp dụng:</strong> @Model.StartDate.ToString("dd/MM/yyyy") - @Model.EndDate.ToString("dd/MM/yyyy")</p>
+
+                            @if (details.Any())
+                            {
+                                <h5 class="mt-4 mb-2">Chi tiết khuyến mại:</h5>
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var detail in details)
+                                    {
+                                        <li class="list-group-item">
+                                            Phòng ID: @detail.RomId - Giảm: @detail.DiscountPercent%
+                                        </li>
+                                    }
+                                </ul>
+                            }
+
+                            <div class="mt-4">
+                                <a href="@Url.Action("Index", "Promotion")" class="btn btn-secondary me-2">
+                                    <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @await Component.InvokeAsync("_FooterPartial")
+    @await Component.InvokeAsync("_ScriptsPartial")
+</body>
+</html>
+
+<style>
+    .card-body h2 {
+        color: #343a40;
+    }
+
+    .btn i {
+        margin-right: 5px;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />

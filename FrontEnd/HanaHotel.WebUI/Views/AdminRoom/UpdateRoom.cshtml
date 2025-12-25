@@ -1,0 +1,262 @@
+﻿@model HanaHotel.WebUI.DTOs.RoomDTO.UpdateRoomDTO
+
+@{
+    ViewData["Title"] = "Cập nhật phòng";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+
+    // safe reflection to support either Model.Images (IEnumerable<object>) or Model.ImagePaths (IEnumerable<string>)
+    var imagesProp = Model?.GetType().GetProperty("Images");
+    var imagePathsProp = Model?.GetType().GetProperty("ImagePaths");
+    IEnumerable<object>? objImages = null;
+    IEnumerable<string>? strPaths = null;
+
+    if (imagesProp != null)
+        objImages = imagesProp.GetValue(Model) as IEnumerable<object>;
+
+    if (strPaths == null && imagePathsProp != null)
+        strPaths = imagePathsProp.GetValue(Model) as IEnumerable<string>;
+}
+
+<form method="post" asp-action="UpdateRoom" asp-controller="AdminRoom" enctype="multipart/form-data" id="updateRoomForm">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="RoomName" class="form-label">Tiêu đề</label>
+        <input asp-for="RoomName" class="form-control" />
+        <span asp-validation-for="RoomName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label">Giá</label>
+        <input asp-for="Price" type="number" step="0.01" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Size" class="form-label">Kích thước</label>
+        <input asp-for="Size" type="number" step="0.01" class="form-control" />
+        <span asp-validation-for="Size" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="BedCount" class="form-label">Số giường</label>
+        <input asp-for="BedCount" class="form-control" />
+        <span asp-validation-for="BedCount" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">Mô tả</label>
+        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    @* Existing images rendering (safer Razor syntax, avoids inline @{} + HTML mixing) *@
+    @if (objImages?.Any() == true)
+    {
+        <div class="mb-3">
+            <label class="form-label">Ảnh hiện có</label>
+            <div class="d-flex flex-wrap gap-3">
+                @foreach (var imgObj in objImages)
+                {
+                    var idProp = imgObj?.GetType().GetProperty("Id");
+                    var pathProp = imgObj?.GetType().GetProperty("ImagePath") ?? imgObj?.GetType().GetProperty("Path");
+                    var idVal = idProp != null ? idProp.GetValue(imgObj)?.ToString() : null;
+                    var pathVal = pathProp != null ? pathProp.GetValue(imgObj)?.ToString() : imgObj?.ToString();
+                    var displayPath = pathVal ?? string.Empty;
+                    var src = string.IsNullOrWhiteSpace(displayPath)
+                        ? string.Empty
+                        : (displayPath.StartsWith("http", System.StringComparison.OrdinalIgnoreCase) ? displayPath : ("~/" + displayPath.TrimStart('/')));
+                    <div class="card" style="width:150px;">
+                        <img src="@Url.Content(src)" class="card-img-top" style="height:100px; object-fit:cover;" alt="img" />
+                        <div class="card-body p-2">
+                            <div class="form-check">
+                                @if (!string.IsNullOrWhiteSpace(idVal))
+                                {
+                                    <input class="form-check-input" type="checkbox" name="removeImageIds" value="@idVal" id="rm@idVal" />
+                                    <label class="form-check-label small" for="rm@idVal">Xóa</label>
+                                }
+                                else
+                                {
+                                    <input class="form-check-input" type="checkbox" name="removeImagePaths" value="@displayPath" id="rm@(displayPath.GetHashCode())" />
+                                    <label class="form-check-label small" for="rm@(displayPath.GetHashCode())">Xóa</label>
+                                }
+                            </div>
+                            <div class="small text-truncate">@displayPath</div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="form-text mt-1">Tích chọn ảnh và submit để xóa ảnh khỏi phòng.</div>
+        </div>
+    }
+    else if (strPaths?.Any() == true)
+    {
+        <div class="mb-3">
+            <label class="form-label">Ảnh hiện có</label>
+            <div class="d-flex flex-wrap gap-3">
+                @foreach (var p in strPaths)
+                {
+                    var src = string.IsNullOrWhiteSpace(p) ? string.Empty : (p.StartsWith("http", System.StringComparison.OrdinalIgnoreCase) ? p : ("~/" + p.TrimStart('/')));
+                    <div class="card" style="width:150px;">
+                        <img src="@Url.Content(src)" class="card-img-top" style="height:100px; object-fit:cover;" alt="img" />
+                        <div class="card-body p-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="removeImagePaths" value="@p" id="rm@(p.GetHashCode())" />
+                                <label class="form-check-label small" for="rm@(p.GetHashCode())">Xóa</label>
+                            </div>
+                            <div class="small text-truncate">@p</div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="form-text mt-1">Tích chọn ảnh và submit để xóa ảnh khỏi phòng.</div>
+        </div>
+    }
+
+    <!-- New image upload -->
+    <div class="mb-3">
+        <label class="form-label">Thêm ảnh mới</label>
+        <input type="file" name="Images" accept="image/*" multiple class="form-control" id="imagesInputUpdate" />
+        <div class="form-text">Chọn thêm nhiều ảnh nếu cần.</div>
+
+        <!-- previews -->
+        <div id="imagesPreviewUpdate" class="d-flex flex-wrap gap-2 mt-2"></div>
+    </div>
+
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Cập nhật phòng</button>
+        <a asp-controller="AdminRoom" asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+(function () {
+    const form = document.getElementById('updateRoomForm');
+    const input = document.getElementById('imagesInputUpdate');
+    const preview = document.getElementById('imagesPreviewUpdate');
+
+    let dt = new DataTransfer();
+    let objectUrls = []; // track URLs to revoke
+
+    function isSameFile(a, b) {
+        return a.name === b.name && a.size === b.size && a.lastModified === b.lastModified;
+    }
+
+    function revokeAllUrls() {
+        objectUrls.forEach(u => { try { URL.revokeObjectURL(u); } catch {} });
+        objectUrls = [];
+    }
+
+    function removeByIndex(idx) {
+        const files = Array.from(dt.files);
+        const newDt = new DataTransfer();
+        files.forEach((f, i) => { if (i !== idx) newDt.items.add(f); });
+        dt = newDt;
+        renderPreviews();
+    }
+
+    function renderPreviews() {
+        // revoke previous blob urls
+        revokeAllUrls();
+
+        preview.innerHTML = '';
+        const files = Array.from(dt.files);
+        files.forEach((file, idx) => {
+            const url = URL.createObjectURL(file);
+            objectUrls.push(url);
+
+            const card = document.createElement('div');
+            card.className = 'position-relative border rounded overflow-hidden';
+            card.style.width = '120px';
+            card.style.height = '90px';
+            card.style.flex = '0 0 auto';
+
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = file.name;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
+            img.draggable = false;
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn btn-sm btn-danger remove-btn rounded-circle p-0';
+            btn.dataset.index = idx;
+            // explicit positioning + sizing so each button is visible on its card
+            btn.style.position = 'absolute';
+            btn.style.top = '6px';
+            btn.style.left = '6px';
+            btn.style.width = '26px';
+            btn.style.height = '26px';
+            btn.style.display = 'flex';
+            btn.style.alignItems = 'center';
+            btn.style.justifyContent = 'center';
+            btn.style.zIndex = '20';
+            btn.style.lineHeight = '1';
+            btn.setAttribute('aria-label', 'Xóa ảnh');
+            btn.textContent = '×';
+
+            // stopPropagation so clicking button won't trigger other handlers
+            btn.addEventListener('click', function (ev) {
+                ev.stopPropagation();
+                const i = Number(this.dataset.index);
+                removeByIndex(i);
+            });
+
+            card.appendChild(img);
+            card.appendChild(btn);
+            preview.appendChild(card);
+        });
+    }
+
+    input.addEventListener('change', function (e) {
+        const files = Array.from(e.target.files || []);
+        files.forEach(f => {
+            const duplicate = Array.from(dt.files).some(existing => isSameFile(existing, f));
+            if (!duplicate) dt.items.add(f);
+        });
+        renderPreviews();
+        e.target.value = null;
+    });
+
+    // keep remove logic via buttons; no global delegation needed now
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        try {
+            const fd = new FormData(form);
+            fd.delete('Images');
+            Array.from(dt.files).forEach(f => fd.append('Images', f));
+
+            const resp = await fetch(form.action || window.location.href, {
+                method: form.method?.toUpperCase() || 'POST',
+                body: fd,
+                credentials: 'same-origin'
+            });
+
+            if (resp.redirected) {
+                window.location.href = resp.url;
+                return;
+            }
+
+            if (resp.ok) {
+                window.location.href = '/AdminRoom/Index' || '/AdminRoom';
+                return;
+            } else {
+                let text = await resp.text();
+                try { const json = JSON.parse(text); text = JSON.stringify(json, null, 2); } catch {}
+                alert('Lỗi khi cập nhật phòng:\n' + text);
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Lỗi mạng khi gửi form. Kiểm tra console.');
+        } finally {
+            revokeAllUrls();
+        }
+    });
+})();
+</script>
+}

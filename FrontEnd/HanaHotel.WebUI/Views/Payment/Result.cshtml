@@ -1,0 +1,36 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Layout";
+    var message = ViewBag.Message as string ?? "Kết quả thanh toán";
+    var redirect = ViewBag.Redirect as string ?? Url.Action("Index", "Home");
+}
+<!DOCTYPE html>
+<html lang="vi">
+
+@await Component.InvokeAsync("_HeadPartial")
+
+<body>
+    <div class="container-xxl bg-white p-0">
+
+        @await Component.InvokeAsync("_SpinnerPartial")
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h4>@message</h4>
+                            <p>
+                                <a class="btn btn-primary" href="@redirect">Quay về</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @await Component.InvokeAsync("_ScriptsPartial")
+        @await Component.InvokeAsync("_FooterPartial")
+    </div>
+</body>
+</html>

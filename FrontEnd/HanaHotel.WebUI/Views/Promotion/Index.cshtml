@@ -1,0 +1,50 @@
+﻿@model List<HanaHotel.DtoLayer.DTOs.PromotionDTO.PromotionListDto>
+@{
+    ViewData["Title"] = "Danh sách khuyến mãi";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+}
+
+@* <h3>Danh sách khuyến mãi</h3> *@
+
+<p>
+    <a asp-controller="Promotion" asp-action="Create" class="btn btn-primary">Thêm khuyến mãi</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Mã khuyến mại</th>
+            <th>Tên</th>
+            <th>Số tiền giảm</th>
+            <th> Ngày bắt đầu</th>
+            <th>Ngày kết thúc</th>
+            <th>Phòng áp dụng</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            var p = Model[i];
+            <tr>
+                <td>@p.PromotionId</td>
+                <td>@p.PromotionName</td>
+                <td>@p.DiscountAmount.ToString("N0")</td>
+                <td>@p.StartDate.ToString("dd/MM/yyyy")</td>
+                <td>@p.EndDate.ToString("dd/MM/yyyy")</td>
+                <td>
+                    @foreach (var d in p.Details)
+                    {
+                        <div>@d.RoomName</div>
+                    }
+                </td>
+                <td>
+                    <a asp-controller="Promotion" asp-action="Edit" asp-route-id="@p.PromotionId" class="btn btn-sm btn-warning">Sửa</a>
+                    <form method="post" asp-controller="Promotion" asp-action="Delete" asp-route-id="@p.PromotionId" style="display:inline" onsubmit="return confirm('Xóa?');">
+                        <button class="btn btn-sm btn-danger">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,56 @@
+﻿
+
+<div class="email-left-box">
+    <a href="#" class="btn btn-primary btn-block">Soạn thư</a>
+
+    <div class="mail-list mt-4">
+
+         <a href="/AdminContact/Inbox" class="list-group-item border-0 p-r-0">
+            <i class="fa fa-inbox font-18 align-middle mr-2"></i>
+            <b>Hộp thư đến</b>
+            <span class="badge badge-primary badge-sm float-right m-t-5">@ViewBag.InboxCount</span>
+        </a>
+
+        <a href="/AdminContact/OutgoingMessages" class="list-group-item border-0 p-r-0">
+            <i class="fa fa-paper-plane font-18 align-middle mr-2"></i>
+            <b>Thư đã gửi</b>
+            <span class="badge badge-primary badge-sm float-right m-t-5">@ViewBag.RepliedCount</span>
+        </a>
+
+        <a href="#" class="list-group-item border-0 p-r-0">
+            <i class="fa fa-star-o font-18 align-middle mr-2"></i>
+            Quan trọng
+            <span class="badge badge-danger badge-sm float-right m-t-5"></span>
+        </a>
+
+        <a href="#" class="list-group-item border-0 p-r-0">
+            <i class="mdi mdi-file-document-box font-18 align-middle mr-2"></i>
+            Thư nháp
+        </a>
+
+        <a href="#" class="list-group-item border-0 p-r-0">
+            <i class="fa fa-trash font-18 align-middle mr-2"></i>
+           Thùng rác
+        </a>
+    </div>
+
+    <h5 class="mt-5 m-b-10">Danh mục</h5>
+
+    <div class="list-group mail-list">
+
+        @if (ViewBag.Categories != null || ViewBag.Categories.Count == 0)
+        {
+            foreach (var item in ViewBag.Categories)
+            {
+                <a href="/AdminContact/Inbox?categoryId=@item.MessageCategoryId" class="list-group-item border-0">
+            <span class="fa fa-briefcase f-s-14 mr-2"></span>
+                    @item.MessageCategoryName
+        </a>
+            }
+        }
+        else
+        {
+            <div class="list-group-item border-0">Không có danh mục nào</div>
+        }
+    </div>
+</div>

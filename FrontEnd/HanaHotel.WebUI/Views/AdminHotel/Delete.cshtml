@@ -1,0 +1,23 @@
+﻿@model HanaHotel.DtoLayer.DTOs.HotelDTO.HotelDto
+
+@{
+    ViewBag.Title = "Xóa khách sạn - Hana Hotel";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+}
+
+<div class="container py-5">
+    <h4>Bạn có chắc muốn xóa mục này không?</h4>
+
+    <div>
+        <dl class="row">
+            <dt class="col-sm-2">Tên</dt><dd class="col-sm-10">@Model.HotelName</dd>
+            <dt class="col-sm-2">Địa chỉ</dt><dd class="col-sm-10">@Model.Address</dd>
+        </dl>
+    </div>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>

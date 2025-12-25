@@ -1,0 +1,109 @@
+﻿@model HanaHotel.WebUI.Models.BookingRoomViewModel
+@{
+    var nights = 1;
+    try { nights = Math.Max(1, (Model.CheckOut.Date - Model.CheckIn.Date).Days); } catch { nights = 1; }
+
+    string Fmt(object? v)
+    {
+        if (v == null) return "—";
+        if (decimal.TryParse(v.ToString(), out var d)) return string.Format("{0:N0} ₫", d);
+        if (double.TryParse(v.ToString(), out var dd)) return string.Format("{0:N0} ₫", dd);
+        return v.ToString() ?? "—";
+    }
+
+    string LocalizeStatus(string? s)
+    {
+        if (string.IsNullOrWhiteSpace(s)) return "Không xác định";
+        switch (s.Trim().ToLowerInvariant())
+        {
+            case "pending": return "Đang chờ";
+            case "deposited": return "Đã đặt cọc";
+            case "paid": return "Đã thanh toán";
+            case "confirmed": return "Đã xác nhận";
+            case "cancelled": return "Đã hủy";
+            case "completed": return "Hoàn thành";
+            default:
+                try { return System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(s.Replace('_',' ').Replace('-', ' ')); } catch { return s; }
+        }
+    }
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Thông tin khách hàng</h5>
+                <div class="row">
+                    <div class="col-md-6"><strong>Họ và tên:</strong> @(string.IsNullOrWhiteSpace(Model.FullName) ? "—" : Model.FullName)</div>
+                    <div class="col-md-6"><strong>Email:</strong> @(!string.IsNullOrEmpty(Model.Email) ? Model.Email : "—")</div>
+                    <div class="col-md-6"><strong>Số điện thoại:</strong> @(!string.IsNullOrEmpty(Model.Phone) ? Model.Phone : "—")</div>
+                    <div class="col-md-6"><strong>Mã đơn:</strong> @Model.BookingId</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Chi tiết đặt phòng</h5>
+
+                <div class="row g-2 mb-2">
+                    <div class="col-md-4"><strong>Ngày đặt:</strong> @Model.BookingDate.ToString("dd/MM/yyyy")</div>
+                    <div class="col-md-4"><strong>Ngày nhận:</strong> @Model.CheckIn.ToString("dd/MM/yyyy")</div>
+                    <div class="col-md-4"><strong>Ngày trả:</strong> @Model.CheckOut.ToString("dd/MM/yyyy")</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8"><strong>Tên khách sạn:</strong> @(string.IsNullOrWhiteSpace(Model.HotelName) ? "—" : Model.HotelName)</div>
+                    <div class="col-md-4"><strong>Địa chỉ:</strong> @(string.IsNullOrWhiteSpace(Model.HotelAddress) ? "—" : Model.HotelAddress)</div>
+                </div>
+
+                <div class="table-responsive mb-2">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Phòng</th>
+                                <th>Số lượng</th>
+                                <th>Người lớn</th>
+                                <th>Trẻ em</th>
+                                <th>Giá/đêm</th>
+                                <th>Số đêm</th>
+                                <th>Tạm tính</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var rd in Model.BookingRoomDetails)
+                            {
+                                var price = rd.Price;
+                                var qty = rd.Quantity > 0 ? rd.Quantity : 1;
+                                var lineTotal = price * qty * (decimal)nights;
+                                <tr>
+                                    <td>@(string.IsNullOrEmpty(rd.RoomName) ? rd.RoomId.ToString() : rd.RoomName)</td>
+                                    <td>@qty</td>
+                                    <td>@(rd.AdultAmount > 0 ? rd.AdultAmount.ToString() : "—")</td>
+                                    <td>@(rd.ChildrenAmount > 0 ? rd.ChildrenAmount.ToString() : "—")</td>
+                                    <td>@(price > 0 ? string.Format("{0:N0} ₫", price) : "—")</td>
+                                    <td>@nights</td>
+                                    <td>@(price > 0 ? string.Format("{0:N0} ₫", lineTotal) : "—")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row align-items-center">
+                    <div class="col-md-6"><strong>Yêu cầu đặc biệt:</strong> @(string.IsNullOrEmpty(Model.AdditionalRequest) ? "Không có" : Model.AdditionalRequest)</div>
+                    <div class="col-md-6 text-end">
+                        <div><strong>Tổng tạm tính:</strong></div>
+                        <div class="h5 mb-1">@Fmt((decimal)Model.Subtotal)</div>
+
+                        <div class="small text-muted">Đã thanh toán: <strong class="text-success">@Fmt(Model.PaidAmount)</strong></div>
+                        <div class="small text-danger">Còn thiếu: <strong>@Fmt(Model.DueAmount)</strong></div>
+                    </div>
+                </div>
+
+                <div class="mt-2">
+                    <strong>Trạng thái:</strong> <span class="badge bg-secondary">@LocalizeStatus(Model.Status)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

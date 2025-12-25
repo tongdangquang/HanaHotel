@@ -1,0 +1,80 @@
+﻿@model List<HanaHotel.WebUI.DTOs.RoomDTO.ResultRoomDTO>
+
+@{
+    ViewData["Title"] = "Danh sách phòng";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Quản lý phòng</h2>
+
+    <div class="mb-3">
+        <a asp-controller="AdminRoom" asp-action="AddRoom" class="btn btn-primary">Thêm phòng mới</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center">
+            Không có phòng nào được hiển thị.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped text-center" style="width: 100%;">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Tiêu đề</th>
+                        <th>Giá</th>
+                        <th>Kích thước</th>
+                        <th>Số giường</th>
+                        <th>Mô tả</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var room in Model)
+                    {
+                        <tr>
+                            <td>@room.Id</td>
+                            <td>@room.RoomName</td>
+                            <td>@room.Price.ToString("N0")</td>
+                            <td>@room.Size</td>
+                            <td>@room.BedCount</td>
+                            <td style="max-width:240px;white-space:normal;text-align:left;">@room.Description</td>
+                            <td>
+                                <a asp-controller="AdminRoom" asp-action="UpdateRoom" asp-route-id="@room.Id" class="btn btn-warning btn-sm">Chỉnh sửa</a>
+                                <a asp-controller="AdminRoom" asp-action="DeleteRoom" asp-route-id="@room.Id" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa phòng này không?');">Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="mt-4 text-center">
+        <p class="text-muted">Tổng số phòng: <strong>@Model.Count()</strong></p>
+    </div>
+</div>
+
+<style>
+    .table {
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+
+    .table th, .table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+    .btn-warning {
+        border-color: #ffc107;
+    }
+
+    .btn-danger {
+        border-color: #dc3545;
+    }
+</style>

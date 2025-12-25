@@ -1,0 +1,52 @@
+﻿@model List<HanaHotel.WebUI.DTOs.ReviewDTO.ResultReviewDTO>
+
+@{
+    ViewData["Title"] = "Quản lý đánh giá";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">@ViewData["Title"]</h2>
+
+    <div class="mb-3">
+        <a asp-controller="Review" asp-action="AddReview" class="btn btn-primary">Thêm đánh giá mới</a>
+    </div>
+
+    @if (!Model?.Any() ?? true)
+    {
+        <div class="alert alert-info text-center">Không có đánh giá nào.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Sao</th>
+                        <th>Nội dung</th>
+                        <th>Người dùng (Id)</th>
+                        <th>Phòng (Id)</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in Model)
+                    {
+                        <tr>
+                            <td>@r.Id</td>
+                            <td>@r.RatingStars</td>
+                            <td>@(string.IsNullOrWhiteSpace(r.Content) ? "-" : r.Content)</td>
+                            <td>@r.UserId</td>
+                            <td>@r.RoomId</td>
+                            <td>
+                                <a asp-controller="Review" asp-action="UpdateReview" asp-route-id="@r.Id" class="btn btn-warning btn-sm">Sửa</a>
+                                <a asp-controller="Review" asp-action="DeleteReview" asp-route-id="@r.Id" class="btn btn-danger btn-sm" onclick="return confirm('Bạn chắc chắn muốn xóa đánh giá này không?');">Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

@@ -1,0 +1,42 @@
+﻿@model HanaHotel.DtoLayer.DTOs.HotelDTO.HotelDto
+
+@{
+    ViewBag.Title = "Chi tiết khách sạn - Hana Hotel";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+}
+
+<div class="container py-5">
+    <div>
+        <h4>@Model.HotelName</h4>
+        <dl class="row">
+            <dt class="col-sm-2">Mã</dt><dd class="col-sm-10">@Model.Id</dd>
+            <dt class="col-sm-2">Tên</dt><dd class="col-sm-10">@Model.HotelName</dd>
+            <dt class="col-sm-2">Trạng thái</dt>
+            <dd class="col-sm-10">@(Model.Status == 0 ? "Mở" : (Model.Status == 1 ? "Đóng" : "Bảo trì"))</dd>
+            <dt class="col-sm-2">Địa chỉ</dt><dd class="col-sm-10">@Model.Address</dd>
+            <dt class="col-sm-2">Điện thoại</dt><dd class="col-sm-10">@Model.PhoneNumber</dd>
+            <dt class="col-sm-2">Số lượng nhân viên</dt><dd class="col-sm-10">@Model.EmployeeCount</dd>
+        </dl>
+
+        <h5>Chi tiết (Phòng)</h5>
+        <table class="table">
+            <thead><tr><th>Mã phòng</th><th>Tên phòng</th><th>Số lượng</th><th>Giá</th></tr></thead>
+            <tbody>
+@foreach (var d in Model.HotelDetails ?? Enumerable.Empty<HanaHotel.DtoLayer.DTOs.HotelDTO.HotelDetailDto>())
+{
+    <tr>
+        <td>@d.RoomId</td>
+        <td>@d.Room?.RoomName</td>
+        <td>@d.RoomCount</td>
+        <td>@d.Room?.Price</td>
+    </tr>
+}
+            </tbody>
+        </table>
+    </div>
+
+    <p>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Sửa</a>
+    </p>
+</div>

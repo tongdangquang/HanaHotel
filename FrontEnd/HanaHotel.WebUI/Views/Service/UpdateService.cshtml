@@ -1,0 +1,77 @@
+﻿@model HanaHotel.WebUI.DTOs.ServiceDTO.UpdateServiceDTO
+
+@{
+    ViewData["Title"] = "Cập nhật dịch vụ";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+
+    var rooms = ViewData["Rooms"] as List<SelectListItem> ?? new List<SelectListItem>();
+    var selectedRoomIds = ViewBag.SelectedRooms as List<int> ?? new List<int>();
+}
+
+<form method="post" asp-action="UpdateService" asp-controller="Service">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <!-- Tên dịch vụ -->
+    <div class="mb-3">
+        <label class="form-label">Tên dịch vụ</label>
+        <input asp-for="ServiceName" class="form-control" />
+        <span asp-validation-for="ServiceName" class="text-danger"></span>
+    </div>
+
+    <!-- Giá -->
+    <div class="mb-3">
+        <label class="form-label">Giá</label>
+        <input asp-for="Price" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <!-- Đơn vị -->
+    <div class="mb-3">
+        <label class="form-label">Đơn vị</label>
+        <input asp-for="Unit" class="form-control" />
+        <span asp-validation-for="Unit" class="text-danger"></span>
+    </div>
+
+    <!-- Mô tả -->
+    <div class="mb-3">
+        <label class="form-label">Mô tả</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <!-- Chọn phòng -->
+    <div class="mb-3">
+        <label class="form-label">Chọn phòng</label>
+
+        <div class="row">
+            @foreach (var room in ViewBag.Rooms)
+            {
+                bool isChecked = ViewBag.SelectedRoomIds != null &&
+                ((List<int>)ViewBag.SelectedRoomIds).Contains(room.Id);
+
+                <div class="col-md-4">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="RoomIds"
+                               value="@room.Id"
+                        @(isChecked ? "checked" : "") />
+
+                        <label class="form-check-label">
+                            @room.RoomName
+                        </label>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <span asp-validation-for="RoomIds" class="text-danger"></span>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary mt-2">Cập nhật</button>
+    <a asp-action="Index" asp-controller="Service" class="btn btn-secondary mt-2 ms-2">Quay lại</a>
+</form>

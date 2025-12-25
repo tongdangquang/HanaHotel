@@ -1,0 +1,337 @@
+﻿@{
+    ViewData["Title"] = "Thống kê và báo cáo";
+    var endDefault = DateTime.UtcNow.Date;
+    var startDefault = endDefault.AddDays(-7);
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+}
+
+@section PageTitle {
+    <div class="d-flex align-items-center justify-content-between">
+        <div>
+            <h3 class="mb-0">Thống kê và báo cáo</h3>
+            <small class="text-muted">Xem và xuất báo cáo theo khoảng thời gian</small>
+        </div>
+    </div>
+}
+
+<style>
+    /* Page-specific styles */
+    .report-controls {
+        margin: 1rem 0;
+        display: flex;
+        gap: .5rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .chart-card .card-body {
+        /* fixed visual area for Chart.js canvas */
+        height: 340px;
+        min-height: 220px;
+        max-height: 640px;
+        padding: .75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chart-card .chart-canvas {
+        width: 100% !important;
+        height: 100% !important;
+        display: block;
+    }
+
+    .card-header .btn {
+        margin-left: .5rem;
+    }
+</style>
+
+<div class="report-controls">
+    <label class="me-2 mb-0">Từ</label>
+    <input id="startDate" type="date" class="form-control w-auto me-2" value="@startDefault.ToString("yyyy-MM-dd")" />
+    <label class="me-2 mb-0">Đến</label>
+    <input id="endDate" type="date" class="form-control w-auto me-2" value="@endDefault.ToString("yyyy-MM-dd")" />
+    <button id="btnRefresh" class="btn btn-primary">Cập nhật</button>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card chart-card">
+            <div class="card-header d-flex align-items-center">
+                <div id="titleRevenue">Doanh thu theo ngày</div>
+                <button id="btnExportRevenue" class="btn btn-sm btn-outline-secondary ms-auto">Xuất PDF</button>
+            </div>
+            <div class="card-body">
+                <canvas id="revenueChart" class="chart-canvas"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card chart-card h-100">
+            <div class="card-header d-flex align-items-center">
+                <div id="titleRoom">Loại phòng được đặt nhiều nhất</div>
+                <button id="btnExportRoom" class="btn btn-sm btn-outline-secondary ms-auto">Xuất PDF</button>
+            </div>
+            <div class="card-body">
+                <canvas id="roomTypeChart" class="chart-canvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card chart-card h-100">
+            <div class="card-header d-flex align-items-center">
+                <div id="titleHotel">Khách sạn được đặt nhiều nhất</div>
+                <button id="btnExportHotel" class="btn btn-sm btn-outline-secondary ms-auto">Xuất PDF</button>
+            </div>
+            <div class="card-body">
+                <canvas id="hotelChart" class="chart-canvas"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        (function () {
+            const startInput = document.getElementById('startDate');
+            const endInput = document.getElementById('endDate');
+            const btnRefresh = document.getElementById('btnRefresh');
+
+            const btnExportRevenue = document.getElementById('btnExportRevenue');
+            const btnExportRoom = document.getElementById('btnExportRoom');
+            const btnExportHotel = document.getElementById('btnExportHotel');
+
+            const titleRevenue = "Doanh thu theo ngay";
+            const titleRoom = "Phòng duoc dat nhieu nhat";
+            const titleHotel = "Khach san duoc dat nhieu nhat";
+
+            let revenueChart = null;
+            let roomChart = null;
+            let hotelChart = null;
+
+            const dataUrl = '@Url.Action("Data", "AdminReport")';
+
+            function removeDiacritics(str) {
+                if (!str) return str;
+                return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            }
+
+            function formatDateTime(dt) {
+                const d = new Date(dt);
+                const day = String(d.getDate()).padStart(2, '0');
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const year = d.getFullYear();
+                const hour = String(d.getHours()).padStart(2,'0');
+                const minute = String(d.getMinutes()).padStart(2,'0');
+                return `${day}/${month}/${year} ${hour}:${minute}`;
+            }
+
+            async function fetchData(start, end) {
+                const url = `${dataUrl}?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`;
+                const res = await fetch(url, { cache: 'no-store' });
+                if (!res.ok) {
+                    const txt = await res.text();
+                    console.error('Server error response:', txt);
+                    throw new Error('Lỗi server: ' + res.status);
+                }
+                return res.json();
+            }
+
+            function destroyChart(chart) {
+                if (chart && typeof chart.destroy === 'function') {
+                    chart.destroy();
+                }
+            }
+
+            function createBarChart(ctx, labels, values, label, color = 'rgba(54, 162, 235, 0.6)') {
+                destroyChart(ctx._instance);
+                const chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: { labels, datasets: [{ label, data: values, backgroundColor: color, borderColor: color.replace('0.6','1'), borderWidth: 1 }] },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+                });
+                ctx._instance = chart;
+                return chart;
+            }
+
+            function createLineChart(ctx, labels, values, label, color = 'rgba(75, 192, 192, 0.6)') {
+                destroyChart(ctx._instance);
+                const chart = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels, datasets: [{ label, data: values, fill: true, backgroundColor: color, borderColor: color.replace('0.6','1'), tension: 0.2 }] },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+                });
+                ctx._instance = chart;
+                return chart;
+            }
+
+            async function refresh() {
+                try {
+                    const start = startInput.value;
+                    const end = endInput.value;
+                    if (!start || !end) {
+                        alert('Vui lòng chọn ngày bắt đầu và kết thúc.');
+                        return;
+                    }
+
+                    // disable to avoid multiple clicks
+                    btnRefresh.disabled = true;
+                    btnRefresh.innerText = 'Đang tải...';
+
+                    const payload = await fetchData(start, end);
+
+                    // revenue chart
+                    const revenueLabels = payload.revenueByDay.map(x => x.date);
+                    const revenueValues = payload.revenueByDay.map(x => Number(x.total));
+                    const revCtx = document.getElementById('revenueChart');
+                    revenueChart = createLineChart(revCtx.getContext('2d'), revenueLabels, revenueValues, 'Doanh thu');
+
+                    // room types
+                    const roomLabels = payload.roomTypes.map(x => x.name);
+                    const roomCounts = payload.roomTypes.map(x => x.count);
+                    const roomCtx = document.getElementById('roomTypeChart');
+                    roomChart = createBarChart(roomCtx.getContext('2d'), roomLabels, roomCounts, 'Số đặt');
+
+                    // hotels
+                    const hotelLabels = payload.hotels.map(x => x.name);
+                    const hotelCounts = payload.hotels.map(x => x.count);
+                    const hotelCtx = document.getElementById('hotelChart');
+                    hotelChart = createBarChart(hotelCtx.getContext('2d'), hotelLabels, hotelCounts, 'Số đặt', 'rgba(255, 159, 64, 0.6)');
+
+                } catch (err) {
+                    console.error('Lỗi khi load thống kê:', err);
+                    alert('Không thể tải dữ liệu thống kê');
+                } finally {
+                    btnRefresh.disabled = false;
+                    btnRefresh.innerText = 'Cập nhật';
+                }
+            }
+
+            // Export a Chart.js chart to PDF (with simple header)
+            function exportChartToPdfWithHeader(chartInstance, chartTitle, startDate, endDate, filename) {
+                if (!chartInstance) {
+                    alert('Biểu đồ chưa sẵn sàng để xuất.');
+                    return;
+                }
+
+                try {
+                    // Prefer using canvas toDataURL for consistent dimensions
+                    const canvas = chartInstance.canvas || (chartInstance.chart && chartInstance.chart.canvas) || null;
+                    const imgData = canvas ? canvas.toDataURL('image/png', 1.0) : chartInstance.toBase64Image();
+
+                    const { jsPDF } = window.jspdf || {};
+                    if (!jsPDF) {
+                        alert('jsPDF chưa được tải. Vui lòng kiểm tra kết nối CDN hoặc import cục bộ.');
+                        return;
+                    }
+
+                    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+                    const pageWidth = doc.internal.pageSize.getWidth();
+                    const pageHeight = doc.internal.pageSize.getHeight();
+                    const margin = 12;
+
+                    const safeTitle = removeDiacritics(chartTitle);
+                    const safeRange = removeDiacritics(`Khoang thoi gian: ${startDate} - ${endDate}`);
+                    const genText = `Bao cao xuat luc: ${formatDateTime(new Date())}`;
+
+                    const headerY = margin;
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(16);
+                    doc.text(safeTitle, pageWidth / 2, headerY, { align: 'center' });
+
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(11);
+                    doc.text(safeRange, pageWidth / 2, headerY + 8, { align: 'center' });
+
+                    doc.setFontSize(9);
+                    doc.text(genText, pageWidth - margin, headerY + 8, { align: 'right' });
+
+                    const imgTop = headerY + 14;
+                    let imgWidth = pageWidth - margin * 2;
+
+                    const img = new Image();
+                    img.src = imgData;
+
+                    img.onload = function () {
+                        try {
+                            // compute height preserving aspect ratio and ensure finite numbers
+                            let imgHeight = imgWidth * (img.height / (img.width || 1));
+                            const maxImgHeight = pageHeight - imgTop - margin;
+                            if (!isFinite(imgHeight) || imgHeight <= 0) {
+                                imgHeight = Math.min(maxImgHeight, imgWidth * 0.6); // fallback ratio
+                            }
+                            if (imgHeight > maxImgHeight) {
+                                const scale = maxImgHeight / imgHeight;
+                                imgHeight = imgHeight * scale;
+                                imgWidth = imgWidth * scale;
+                            }
+
+                            const x = (pageWidth - imgWidth) / 2;
+                            const y = imgTop + 4;
+
+                            // Pass both width and height (numeric) to addImage to avoid jsPDF.scale errors
+                            doc.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+                            doc.save(filename);
+                        } catch (errAdd) {
+                            console.error('addImage failed:', errAdd);
+                            alert('Không thể thêm ảnh biểu đồ vào PDF. Thử tải biểu đồ dưới dạng ảnh rồi in.');
+                            // fallback: open image in new tab
+                            try {
+                                const w = window.open('', '_blank');
+                                if (w) {
+                                    const html = `<img src="${imgData}" style="max-width:100%"><p>${safeTitle} — ${safeRange}</p>`;
+                                    w.document.write(html);
+                                    w.document.close();
+                                }
+                            } catch (e) { /* ignore */ }
+                        }
+                    };
+
+                    img.onerror = function (e) {
+                        console.error('Lỗi load ảnh chart:', e);
+                        alert('Không thể tạo ảnh từ biểu đồ.' );
+                    };
+                } catch (ex) {
+                    console.error('Lỗi khi xuất PDF:', ex);
+                    alert('Xuất PDF thất bại. Xem console để biết chi tiết.');
+                }
+            }
+
+            function sanitizeFilename(name) {
+                return name.replace(/[^a-z0-9_\-\.]/gi, '_');
+            }
+
+            btnExportRevenue.addEventListener('click', () => {
+                if (!revenueChart) { alert('Biểu đồ chưa sẵn sàng'); return; }
+                const filename = sanitizeFilename(removeDiacritics(titleRevenue)) + `_${startInput.value}_${endInput.value}.pdf`;
+                exportChartToPdfWithHeader(revenueChart, titleRevenue, startInput.value, endInput.value, filename);
+            });
+
+            btnExportRoom.addEventListener('click', () => {
+                if (!roomChart) { alert('Biểu đồ chưa sẵn sàng'); return; }
+                const filename = sanitizeFilename(removeDiacritics(titleRoom)) + `_${startInput.value}_${endInput.value}.pdf`;
+                exportChartToPdfWithHeader(roomChart, titleRoom, startInput.value, endInput.value, filename);
+            });
+
+            btnExportHotel.addEventListener('click', () => {
+                if (!hotelChart) { alert('Biểu đồ chưa sẵn sàng'); return; }
+                const filename = sanitizeFilename(removeDiacritics(titleHotel)) + `_${startInput.value}_${endInput.value}.pdf`;
+                exportChartToPdfWithHeader(hotelChart, titleHotel, startInput.value, endInput.value, filename);
+            });
+
+            // init
+            btnRefresh.addEventListener('click', refresh);
+            window.addEventListener('load', () => {
+                const s = startInput.value, e = endInput.value;
+                if (!s || !e) return;
+                refresh();
+            });
+        })();
+    </script>
+}

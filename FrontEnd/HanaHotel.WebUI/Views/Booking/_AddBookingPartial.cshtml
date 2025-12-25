@@ -1,0 +1,707 @@
+﻿@model HanaHotel.WebUI.DTOs.BookingDTO.CreateBookingDTO
+
+@{
+    // Server-side defaults to ensure initial HTML has correct values/mins.
+    var today = DateTime.Today;
+    var defaultCheckIn = (Model != null && Model.CheckInDate != default(DateTime)) ? Model.CheckInDate.Date : today;
+    var defaultCheckOut = (Model != null && Model.CheckOutDate != default(DateTime)) ? Model.CheckOutDate.Date : defaultCheckIn.AddDays(1);
+
+    // Format for <input type="date">
+    string fmt(DateTime d) => d.ToString("yyyy-MM-dd");
+
+    var hotels = ViewBag.Hotels as List<string> ?? new List<string>();
+    var roomNames = ViewBag.RoomNames as List<string> ?? new List<string>();
+}
+
+@* Interactive booking UI: left = rooms list, right = booking form + selected rooms summary *@
+<div class="container-xxl my-0">
+    <div class="container">
+        <div class="row g-5">
+            <form id="bookingRoomSearchForm" class="row g-2 mb-3">
+                <div class="col-md-3 position-relative">
+                    <label class="form-label small" for="b_hotelInput">Khách sạn</label>
+                    <div class="dropdown w-100">
+                        @* Server-set default value to first hotel if present *@
+                        <input name="hotelName" id="b_hotelInput" value="@(hotels.FirstOrDefault() ?? "")" class="form-control" autocomplete="off" />
+                        <ul class="dropdown-menu w-100" id="b_hotelMenu" role="listbox" aria-labelledby="b_hotelInput">
+                            @{
+                                var first = true;
+                                foreach (var h in hotels)
+                                {
+                                    if (first)
+                                    {
+                                        <li><button type="button" class="dropdown-item active text-dark" data-value="@h" aria-selected="true">@h</button></li>
+                                        ;
+                                        first = false;
+                                    }
+                                    else
+                                    {
+                                        <li><button type="button" class="dropdown-item text-dark" data-value="@h">@h</button></li>
+                                        ;
+                                    }
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-3 position-relative">
+                    <label class="form-label small" for="b_roomInput">Loại phòng</label>
+                    <div class="dropdown w-100">
+                        <input name="roomName" id="b_roomInput" value="" class="form-control" autocomplete="off" />
+                        <ul class="dropdown-menu w-100" id="b_roomMenu" role="listbox" aria-labelledby="b_roomInput">
+                            <li><button type="button" class="dropdown-item text-dark" data-value=""></button></li>
+                            @foreach (var rn in roomNames)
+                            {
+                                <li><button type="button" class="dropdown-item text-dark" data-value="@rn">@rn</button></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label small" for="b_checkIn">Nhận phòng</label>
+                    <input type="date" id="b_checkIn" name="checkIn" class="form-control" value="@fmt(defaultCheckIn)" />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label small" for="b_checkOut">Trả phòng</label>
+                    <input type="date" id="b_checkOut" name="checkOut" class="form-control" value="@fmt(defaultCheckOut)" />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label small" for="b_minSize">Diện tích tối thiểu (m²)</label>
+                    <input type="number" step="1" min="0" id="b_minSize" name="minSize" class="form-control" />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label small" for="b_bedCount">Số giường tối đa</label>
+                    <input type="number" step="1" min="0" id="b_bedCount" name="bedCount" class="form-control" />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label small" for="b_maxPrice">Giá tối đa (đ)</label>
+                    <input type="number" min="0" step="1000" id="b_maxPrice" name="maxPrice" class="form-control" />
+                </div>
+
+                <div class="col-md-3 text-center text-center d-flex flex-row gap-2" style="margin-top: 39px;">
+                    <button type="submit" class="btn btn-sm btn-primary w-50">Tìm phòng</button>
+                    <button type="button" id="b_resetBtn" class="btn btn-sm btn-outline-secondary w-50">Làm mới</button>
+                </div>
+            </form>
+            <!-- LEFT: available rooms list (images + inputs per room) -->
+            <div class="col-lg-8">
+                <div id="availableRoomsContainer">
+                    @await Html.PartialAsync("~/Views/Booking/_AvailableRoomsPartial.cshtml", Model?.AvailableRooms ?? new List<HanaHotel.WebUI.DTOs.RoomDTO.ResultRoomDTO>())
+                </div>
+            </div>
+
+            <!-- RIGHT: booking form + selected rooms summary -->
+            <div class="col-lg-4">
+                <div class="bg-white shadow-sm p-4 sticky-top" style="top:100px;">
+                    <form method="post" asp-action="AddBooking" asp-controller="Booking" id="bookingForm">
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger", data_valmsg_summary = "true" })
+                        <div class="mb-3">
+                            <h5 class="mb-2">Thông tin đặt phòng</h5>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small">Họ và tên</label>
+                            <input type="text" class="form-control" asp-for="FullName" id="custFullName" />
+                            <span asp-validation-for="FullName" class="text-danger small" data-valmsg-for="FullName"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small">Email</label>
+                            <input type="email" class="form-control" asp-for="Email" id="custEmail" />
+                            <span asp-validation-for="Email" class="text-danger small" data-valmsg-for="Email"></span>
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small">Nhận phòng</label>
+                                <input type="date"
+                                       class="form-control"
+                                       asp-for="CheckInDate"
+                                       id="custCheckIn"
+                                       value="@fmt(defaultCheckIn)"
+                                       min="@fmt(today)"
+                                       lang="vi" readonly />
+                                <span asp-validation-for="CheckInDate" class="text-danger small" data-valmsg-for="CheckInDate"></span>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small">Trả phòng</label>
+                                <input type="date"
+                                       class="form-control"
+                                       asp-for="CheckOutDate"
+                                       id="custCheckOut"
+                                       value="@fmt(defaultCheckOut)"
+                                       min="@fmt(defaultCheckIn.AddDays(1))"
+                                       lang="vi" readonly />
+                                <span asp-validation-for="CheckOutDate" class="text-danger small" data-valmsg-for="CheckOutDate"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small">Số điện thoại</label>
+                            <input type="tel" class="form-control" asp-for="Phone" id="custPhone" />
+                            <span asp-validation-for="Phone" class="text-danger small" data-valmsg-for="Phone"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small">Ghi chú</label>
+                            <textarea class="form-control" asp-for="AdditionalRequest" id="custRequest" style="height:80px;"></textarea>
+                        </div>
+
+                        <hr />
+
+                        <h6 class="mb-3">Danh sách đã chọn</h6>
+                        <div id="selectedRoomsList" class="mb-3">
+                            <div class="text-muted">Chưa có phòng được chọn.</div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="text-muted">Tạm tính</div>
+                            <div class="fw-bold text-warning" id="subtotalText">0 đ</div>
+                        </div>
+
+                        <div class="d-grid mb-2">
+                            <button type="submit" class="btn btn-warning">Đặt ngay</button>
+                        </div>
+
+                        <div id="hiddenRoomDetailsContainer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* small styling for booking search dropdowns */
+    #b_hotelMenu, #b_roomMenu {
+        max-height: 220px;
+        overflow: auto;
+    }
+
+    .dropdown-item.active {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+
+    /* Selected rooms list improvements */
+    .selected-room-item {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .selected-room-left {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        min-width: 0;
+    }
+
+    .selected-room-title {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-weight: 600;
+    }
+
+    .selected-room-meta {
+        color: #6c757d;
+        font-size: 0.875rem;
+        margin-top: 6px;
+    }
+
+    .selected-room-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 6px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        margin-left: 8px;
+        min-width: 110px;
+    }
+
+    .selected-room-price {
+        font-weight: 700;
+        color: #d69f0b;
+    }
+
+    .selected-room-price-original {
+        color: #6c757d;
+        text-decoration: line-through;
+        font-size: 0.9rem;
+    }
+
+    .selected-room-line-total {
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+</style>
+
+<script>
+    (function () {
+        // constants for occupancy policy
+        const MAX_FREE_GUESTS = 3;
+        const EXTRA_CHARGE_PER_PERSON = 100000; // VND per person per night
+
+        // reuse setupSearchable implementation used in Room/Index (minimal)
+        function setupSearchable(inputId, menuId) {
+            const input = document.getElementById(inputId);
+            const menu = document.getElementById(menuId);
+            if (!input || !menu) return;
+            const items = Array.from(menu.querySelectorAll('.dropdown-item'));
+            const openMenu = () => { menu.classList.add('show'); input.setAttribute('aria-expanded','true'); };
+            const closeMenu = () => setTimeout(()=>{ menu.classList.remove('show'); input.setAttribute('aria-expanded','false'); }, 150);
+
+            // If input empty, keep first item's value as default (and visually active)
+            if ((input.value || '').trim() === '' && items.length > 0) {
+                const first = items[0];
+                const v = first.getAttribute('data-value') || first.textContent.trim();
+                if (v) {
+                    input.value = v;
+                    items.forEach(it => it.classList.remove('active'), it => it.setAttribute('aria-selected','false'));
+                    first.classList.add('active');
+                    first.setAttribute('aria-selected','true');
+                }
+            }
+
+            input.addEventListener('input', function () {
+                const q = (this.value||'').trim().toLowerCase();
+                let any = false;
+                items.forEach(it => {
+                    const v = (it.getAttribute('data-value')||it.textContent||'').toLowerCase();
+                    const show = v.indexOf(q) !== -1;
+                    it.style.display = show ? '' : 'none';
+                    any = any || show;
+                });
+                if (!q) items.forEach(it=>it.style.display='');
+                if (any) openMenu(); else closeMenu();
+            });
+            items.forEach(it => it.addEventListener('click', function () {
+                input.value = this.getAttribute('data-value') || this.textContent;
+                // mark active
+                items.forEach(x => x.classList.remove('active'), x => x.setAttribute('aria-selected','false'));
+                this.classList.add('active');
+                this.setAttribute('aria-selected','true');
+                closeMenu();
+            }));
+            input.addEventListener('focus', ()=>{ items.forEach(it=>it.style.display=''); openMenu(); });
+            input.addEventListener('blur', ()=> closeMenu());
+        }
+
+        setupSearchable('b_hotelInput','b_hotelMenu');
+        setupSearchable('b_roomInput','b_roomMenu');
+
+        // ---- AttachAddButtons + selection management (IMPROVED UI + promotions) ----
+        const selectedRooms = [];
+
+        function formatCurrency(amount) {
+            try { return Number(amount).toLocaleString('vi-VN'); } catch (e) { return amount; }
+        }
+
+        function rebuildHiddenRoomInputs() {
+            const container = document.getElementById('hiddenRoomDetailsContainer');
+            container.innerHTML = '';
+            for (let i = 0; i < selectedRooms.length; i++) {
+                const s = selectedRooms[i];
+                // skip invalid entries
+                if (!s || Number(s.quantity) <= 0) continue;
+                const idx = i;
+                const inputs = [
+                    ['RoomDetails['+idx+'].RoomId', s.roomId],
+                    ['RoomDetails['+idx+'].Quantity', s.quantity],
+                    ['RoomDetails['+idx+'].AdultAmount', s.adult],
+                    ['RoomDetails['+idx+'].ChildrenAmount', s.children],
+                    ['RoomDetails['+idx+'].HotelDetailId', s.hotelDetailId || '']
+                ];
+                inputs.forEach(pair => {
+                    const inp = document.createElement('input');
+                    inp.type = 'hidden';
+                    inp.name = pair[0];
+                    inp.value = pair[1];
+                    container.appendChild(inp);
+                });
+            }
+        }
+
+        function computeEffectiveUnitPrice(price, promoPercent) {
+            let p = Number(price) || 0;
+            const pct = Number(promoPercent || 0);
+            if (pct > 0) {
+                p = p * (1 - (pct / 100));
+            }
+            return p;
+        }
+
+        function computeNights() {
+            const inEl = document.getElementById('custCheckIn');
+            const outEl = document.getElementById('custCheckOut');
+            if (!inEl || !outEl) return 1;
+            const inVal = inEl.value;
+            const outVal = outEl.value;
+            if (!inVal || !outVal) return 1;
+            const d1 = new Date(inVal + 'T00:00:00');
+            const d2 = new Date(outVal + 'T00:00:00');
+            const diff = Math.max(1, Math.round((d2 - d1)/(1000*60*60*24)));
+            return diff;
+        }
+
+        // Render selected rooms: vertical info per your request
+        function renderSelectedRooms() {
+            const list = document.getElementById('selectedRoomsList');
+            list.innerHTML = '';
+            if (!selectedRooms.length) {
+                list.innerHTML = '<div class="text-muted">Chưa có phòng được chọn.</div>';
+                document.getElementById('subtotalText').textContent = '0 đ';
+                return;
+            }
+
+            const container = document.createElement('div');
+            container.className = 'list-group list-group-flush';
+
+            let subtotal = 0;
+            const nights = computeNights();
+
+            // ensure indices are consistent: rebuild list using current array order
+            selectedRooms.forEach((s, i) => {
+                if (!s || Number(s.quantity) <= 0) return;
+                const item = document.createElement('div');
+                item.className = 'list-group-item selected-room-item';
+
+                // left column: title then meta (vertical)
+                const left = document.createElement('div');
+                left.className = 'selected-room-left';
+                left.style.flex = '1 1 auto';
+                left.style.minWidth = '0';
+
+                const title = document.createElement('div');
+                title.className = 'selected-room-title';
+                title.textContent = s.roomName;
+
+                const meta = document.createElement('div');
+                meta.className = 'selected-room-meta';
+                meta.textContent = `${s.quantity} phòng, ${s.adult} người lớn, ${s.children} trẻ em`;
+
+                left.appendChild(title);
+                left.appendChild(meta);
+
+                // right column: price per night, total line, delete button (stacked)
+                const right = document.createElement('div');
+                right.className = 'selected-room-right';
+
+                const originalUnit = Number(s.price) || 0;
+                const effectiveUnit = computeEffectiveUnitPrice(originalUnit, s.promoPercent);
+                const qty = Number(s.quantity || 0);
+
+                // base room total
+                let rowTotal = effectiveUnit * qty * Math.max(1, nights);
+
+                // extra charge for adults above MAX_FREE_GUESTS
+                const adultNum = Math.max(0, Number(s.adult || 0));
+                const extraPersons = Math.max(0, adultNum - MAX_FREE_GUESTS);
+                let extraTotal = 0;
+                if (extraPersons > 0) {
+                    extraTotal = extraPersons * EXTRA_CHARGE_PER_PERSON * qty * Math.max(1, nights);
+                    rowTotal += extraTotal;
+                }
+
+                subtotal += rowTotal;
+
+                // per-night price area (original + discounted)
+                const perNightWrapper = document.createElement('div');
+                perNightWrapper.style.textAlign = 'right';
+
+                if ((Number(s.promoPercent) || 0) > 0) {
+                    const orig = document.createElement('div');
+                    orig.className = 'selected-room-price-original';
+                    orig.textContent = `${formatCurrency(originalUnit)} đ /đêm`;
+                    perNightWrapper.appendChild(orig);
+
+                    const disc = document.createElement('div');
+                    disc.className = 'selected-room-price';
+                    disc.textContent = `${formatCurrency(effectiveUnit)} đ /đêm`;
+                    perNightWrapper.appendChild(disc);
+                } else {
+                    const priceDiv = document.createElement('div');
+                    priceDiv.className = 'selected-room-price';
+                    priceDiv.textContent = `${formatCurrency(originalUnit)} đ /đêm`;
+                    perNightWrapper.appendChild(priceDiv);
+                }
+
+                // total line
+                const totalDiv = document.createElement('div');
+                totalDiv.className = 'selected-room-line-total';
+                totalDiv.textContent = `${formatCurrency(rowTotal)} đ`;
+
+                // extra charge line if any
+                if (extraTotal > 0) {
+                    const extraDiv = document.createElement('div');
+                    extraDiv.className = 'selected-room-line-total text-danger';
+                    extraDiv.style.fontSize = '0.9rem';
+                    extraDiv.textContent = `Phụ thu người vượt: ${formatCurrency(extraTotal)} đ`;
+                    right.appendChild(extraDiv);
+                }
+
+                // delete button (bottom-right)
+                const delBtn = document.createElement('button');
+                delBtn.type = 'button';
+                delBtn.className = 'btn btn-sm btn-outline-danger remove-selected-room';
+                delBtn.setAttribute('data-index', i.toString());
+                delBtn.setAttribute('aria-label', 'Xóa');
+                delBtn.textContent = 'Xóa';
+
+                right.appendChild(perNightWrapper);
+                right.appendChild(totalDiv);
+                right.appendChild(delBtn);
+
+                item.appendChild(left);
+                item.appendChild(right);
+                container.appendChild(item);
+            });
+
+            list.appendChild(container);
+            document.getElementById('subtotalText').textContent = formatCurrency(subtotal) + ' đ';
+        }
+
+        function addOrUpdateSelection(roomId, roomName, price, quantity, adult, children, promoPercent, promoAmount, promoName, hotelDetailId) {
+            const idx = selectedRooms.findIndex(r => Number(r.roomId) === Number(roomId));
+            const qtyNum = Math.max(0, Number(quantity || 0));
+            const adultNum = Math.max(1, Number(adult || 1));
+            const childrenNum = Math.max(0, Number(children || 0));
+
+            if (idx >= 0) {
+                // Replace values (do not accumulate). If qty set to zero, remove entry.
+                if (qtyNum <= 0) {
+                    selectedRooms.splice(idx, 1);
+                } else {
+                    selectedRooms[idx].quantity = qtyNum;
+                    selectedRooms[idx].adult = adultNum;
+                    selectedRooms[idx].children = childrenNum;
+                    selectedRooms[idx].promoPercent = promoPercent;
+                    selectedRooms[idx].promoAmount = '';
+                    selectedRooms[idx].promoName = promoName;
+                    selectedRooms[idx].hotelDetailId = hotelDetailId || selectedRooms[idx].hotelDetailId || '';
+                }
+            } else {
+                // only add when quantity positive
+                if (qtyNum > 0) {
+                    selectedRooms.push({
+                        roomId: Number(roomId),
+                        roomName: roomName,
+                        price: Number(price || 0),
+                        quantity: qtyNum,
+                        adult: adultNum,
+                        children: childrenNum,
+                        promoPercent: promoPercent || '',
+                        promoAmount: '',
+                        promoName: promoName || '',
+                        hotelDetailId: hotelDetailId || ''
+                    });
+                }
+            }
+
+            rebuildHiddenRoomInputs();
+            renderSelectedRooms();
+        }
+
+        // expose attachAddButtons
+        window.attachAddButtons = function attachAddButtons() {
+            document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                if (btn._hasAttach) return;
+                btn._hasAttach = true;
+                btn.addEventListener('click', function () {
+                    const card = btn.closest('.card');
+                    if (!card) return;
+                    const roomIdEl = card.querySelector('.room-id');
+                    const priceEl = card.querySelector('.room-price');
+                    const qtyEl = card.querySelector('.room-quantity');
+                    const adultEl = card.querySelector('.room-adult');
+                    const childrenEl = card.querySelector('.room-children');
+                    const promoPctEl = card.querySelector('.room-promo-percent');
+                    const promoAmtEl = card.querySelector('.room-promo-amount');
+                    const promoNameEl = card.querySelector('.room-promo-name');
+                    const hotelDetailEl = card.querySelector('.room-hotel-detail-id'); // new element
+                    const titleEl = card.querySelector('.card-title') || card.querySelector('h5');
+
+                    const roomId = roomIdEl ? roomIdEl.value : null;
+                    const price = priceEl ? priceEl.value : 0;
+                    const qty = qtyEl ? qtyEl.value : 1;
+                    const adult = adultEl ? adultEl.value : 1;
+                    const children = childrenEl ? childrenEl.value : 0;
+                    const promoPercent = promoPctEl ? promoPctEl.value : '';
+                    const promoAmount = promoAmtEl ? promoAmtEl.value : '';
+                    const promoName = promoNameEl ? promoNameEl.value : '';
+                    const hotelDetailId = hotelDetailEl ? hotelDetailEl.value : '';
+                    const roomName = titleEl ? (titleEl.textContent || titleEl.innerText).trim() : 'Phòng';
+
+                    if (!roomId) return;
+
+                    // Determine if this room is already selected before updating
+                    const idxBefore = selectedRooms.findIndex(r => Number(r.roomId) === Number(roomId));
+                    const qtyNum = Math.max(0, Number(qty || 0));
+
+                    addOrUpdateSelection(roomId, roomName, price, qty, adult, children, promoPercent, promoAmount, promoName, hotelDetailId);
+
+                    // Collapse behavior:
+                    // - If room was NOT selected before (new addition): collapse the card to keep UI compact.
+                    // - If room WAS selected before and user updated quantity > 0: keep the collapse open.
+                    // - If user set quantity to 0 (removal) collapse the card.
+                    const collapseEl = card.querySelector('.collapse');
+                    try {
+                        if (idxBefore < 0) {
+                            // Newly added item -> show the collapse so user can immediately adjust
+                            if (collapseEl && !collapseEl.classList.contains('show')) {
+                                try { new bootstrap.Collapse(collapseEl, { toggle: false }).show(); } catch (err) { }
+                            }
+                        } else {
+                            // Existing item updated:
+                            if (qtyNum <= 0) {
+                                // removed -> hide collapse
+                                if (collapseEl && collapseEl.classList.contains('show')) {
+                                    try { new bootstrap.Collapse(collapseEl, { toggle: false }).hide(); } catch (err) { }
+                                }
+                            } else {
+                                // keep open so user sees current values
+                                if (collapseEl && !collapseEl.classList.contains('show')) {
+                                    try { new bootstrap.Collapse(collapseEl, { toggle: false }).show(); } catch (err) { }
+                                }
+                            }
+                        }
+                    } catch (ex) {
+                        console.error('Collapse control error', ex);
+                    }
+                });
+            });
+
+            // delegate remove clicks
+            document.getElementById('selectedRoomsList').addEventListener('click', function (e) {
+                const target = e.target;
+                if (!target) return;
+                if (target.matches('.remove-selected-room')) {
+                    const idx = Number(target.getAttribute('data-index') || -1);
+                    if (idx >= 0 && idx < selectedRooms.length) {
+                        selectedRooms.splice(idx, 1);
+                        rebuildHiddenRoomInputs();
+                        renderSelectedRooms();
+                    }
+                }
+            });
+        };
+
+        // initial attach
+        if (typeof attachAddButtons === 'function') try { attachAddButtons(); } catch (e) { }
+
+        // rest of scripts (search, sync dates...) unchanged
+        const bookingSearchForm = document.getElementById('bookingRoomSearchForm');
+        const availableRoomsContainer = document.getElementById('availableRoomsContainer');
+
+        function syncBookingFormDatesFromSearch() {
+            const srcCheckIn = document.getElementById('b_checkIn')?.value || '';
+            const srcCheckOut = document.getElementById('b_checkOut')?.value || '';
+            const custIn = document.getElementById('custCheckIn');
+            const custOut = document.getElementById('custCheckOut');
+
+            if (custIn && srcCheckIn) custIn.value = srcCheckIn;
+
+            if (custOut) {
+                if (srcCheckIn) {
+                    const inDate = new Date(srcCheckIn + 'T00:00:00');
+                    if (!isNaN(inDate)) {
+                        const minOut = new Date(inDate);
+                        minOut.setDate(minOut.getDate() + 1);
+                        const minOutStr = minOut.toISOString().slice(0,10);
+                        custOut.min = minOutStr;
+                        if (!custOut.value || custOut.value <= srcCheckIn) {
+                            custOut.value = srcCheckOut && srcCheckOut > srcCheckIn ? srcCheckOut : minOutStr;
+                        } else {
+                            if (srcCheckOut && srcCheckOut > srcCheckIn) custOut.value = srcCheckOut;
+                        }
+                    } else {
+                        if (srcCheckOut) custOut.value = srcCheckOut;
+                    }
+                } else if (srcCheckOut) {
+                    custOut.value = srcCheckOut;
+                }
+            }
+
+            // recalc subtotal
+            try { renderSelectedRooms(); } catch (e) { }
+        }
+
+        async function doBookingSearch() {
+            if (!bookingSearchForm || !availableRoomsContainer) return;
+            try { syncBookingFormDatesFromSearch(); } catch (e) { }
+            const params = new URLSearchParams(new FormData(bookingSearchForm));
+            const mainCheckIn = document.getElementById('custCheckIn')?.value;
+            const mainCheckOut = document.getElementById('custCheckOut')?.value;
+            if (!params.get('checkIn') && mainCheckIn) params.set('checkIn', mainCheckIn);
+            if (!params.get('checkOut') && mainCheckOut) params.set('checkOut', mainCheckOut);
+
+            try {
+                const resp = await fetch(`/Booking/SearchRooms?${params.toString()}`, {
+                    method:'GET', credentials:'same-origin', headers:{ 'Accept':'text/html', 'X-Requested-With':'XMLHttpRequest' }
+                });
+                if (!resp.ok) return console.error('SearchRooms failed', resp.status);
+                const html = await resp.text();
+                availableRoomsContainer.innerHTML = html;
+                if (typeof attachAddButtons === 'function') try{ attachAddButtons(); } catch(e) {}
+                try { syncBookingFormDatesFromSearch(); } catch (e) { }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        if (bookingSearchForm) {
+            bookingSearchForm.addEventListener('submit', function (e) { e.preventDefault(); doBookingSearch(); });
+            const resetBtn = document.getElementById('b_resetBtn');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function () {
+                    bookingSearchForm.querySelectorAll('input[name="hotelName"], input[name="roomName"], input[name="bedCount"], input[name="minSize"], input[name="maxPrice"]').forEach(i => i.value = '');
+                    const mainCheckIn = document.getElementById('custCheckIn')?.value;
+                    const mainCheckOut = document.getElementById('custCheckOut')?.value;
+                    if (mainCheckIn) bookingSearchForm.querySelector('input[name="checkIn"]').value = mainCheckIn;
+                    if (mainCheckOut) bookingSearchForm.querySelector('input[name="checkOut"]').value = mainCheckOut;
+                    doBookingSearch();
+                });
+            }
+        }
+
+        (function triggerInitialSearchIfNeeded() {
+            // Set to true nếu bạn muốn tự động thực hiện tìm khi load.
+            const autoSearch = false;
+            if (!autoSearch) return;
+
+            const hotelInput = document.getElementById('b_hotelInput');
+            if (!hotelInput) return;
+            const val = (hotelInput.value || '').trim();
+            if (!val) return;
+            const run = () => setTimeout(() => { try { doBookingSearch(); } catch (e) {} }, 50);
+            if (document.readyState === 'complete' || document.readyState === 'interactive') run();
+            else document.addEventListener('DOMContentLoaded', run);
+        })();
+
+        (function attachHotelClicksToSearch() {
+            const hotelMenu = document.getElementById('b_hotelMenu');
+            if (!hotelMenu) return;
+            hotelMenu.addEventListener('click', function () {
+                setTimeout(() => { try { doBookingSearch(); } catch (err) {} }, 50);
+            });
+        })();
+
+    })();
+</script>
+
+<!-- Remove these if your layout already includes them to avoid double loading -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js" integrity="" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js" integrity="" crossorigin="anonymous"></script>

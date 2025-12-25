@@ -1,0 +1,65 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Giới thiệu - Hana Hotel";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+
+@await Component.InvokeAsync("_HeadPartial")
+
+<body>
+    <div class="container-xxl bg-white p-0">
+
+        @await Component.InvokeAsync("_SpinnerPartial")
+
+        @await Component.InvokeAsync("_NavbarPartial")
+
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1 class="mb-3">Về Hana Hotel</h1>
+                    <p>
+                        Hana Hotel là khách sạn tâm huyết của chúng tôi — nơi mang đến trải nghiệm nghỉ dưỡng
+                        thoải mái, tiện nghi và phục vụ tận tâm. Với vị trí thuận lợi, hệ thống phòng nghỉ hiện đại,
+                        nhà hàng, spa và các dịch vụ sự kiện, Hana Hotel phục vụ cả khách du lịch lẫn doanh nhân.
+                    </p>
+
+                    <h4 class="mt-4">Sứ mệnh</h4>
+                    <p>Mang đến trải nghiệm lưu trú an toàn, thư giãn và đáng nhớ cho mọi khách hàng.</p>
+
+                    <h4 class="mt-4">Dịch vụ tiêu biểu</h4>
+                    <ul>
+                        <li>Phòng nghỉ tiện nghi, sạch sẽ</li>
+                        <li>Nhà hàng phục vụ ẩm thực đa dạng</li>
+                        <li>Spa & wellness</li>
+                        <li>Phòng hội nghị / tổ chức sự kiện</li>
+                        <li>Dịch vụ hỗ trợ 24/7</li>
+                    </ul>
+
+                    <h4 class="mt-4">Liên hệ</h4>
+                    <p>Địa chỉ: Số 20 ngõ 116 Nhân Hòa, Trung Hòa Nhân Chính, Hà Nội</p>
+                    <p>Email: contact@hanaHotel.com | Điện thoại: +84 123 456 789</p>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="~/images/hotel-hero.jpg" class="card-img-top" alt="Hana Hotel" onerror="this.style.display='none'"/>
+                        <div class="card-body">
+                            <h5 class="card-title">Chào mừng đến với Hana Hotel</h5>
+                            <p class="card-text">Trải nghiệm sự khác biệt với dịch vụ tận tâm và không gian thư giãn.</p>
+                            <a href="/Booking/Index" class="btn btn-primary">Xem phòng & đặt ngay</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @await Component.InvokeAsync("_FooterPartial")
+
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    @await Component.InvokeAsync("_ScriptsPartial")
+</body>
+</html>

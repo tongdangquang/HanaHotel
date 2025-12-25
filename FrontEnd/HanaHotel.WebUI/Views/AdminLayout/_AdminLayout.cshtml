@@ -1,0 +1,60 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+
+@await Html.PartialAsync("/Views/AdminLayout/HeadPartial.cshtml")
+
+<body>
+
+    @await Html.PartialAsync("/Views/AdminLayout/PreloaderPartial.cshtml")
+
+    <div id="main-wrapper" class="d-flex flex-column min-vh-100">
+
+        @await Html.PartialAsync("/Views/AdminLayout/NavheaderPartial.cshtml")
+
+        @await Html.PartialAsync("/Views/AdminLayout/HeaderPartial.cshtml")
+
+        <div class="d-flex flex-grow-1">
+            @* Sidebar partial (left) *@
+            <aside>
+                @await Html.PartialAsync("/Views/AdminLayout/SidebarPartial.cshtml")
+            </aside>
+
+            @* Main content area *@
+            <div class="content-body flex-grow-1">
+                <div class="container-fluid py-4">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            @if (IsSectionDefined("PageTitle"))
+                            {
+                                @RenderSection("PageTitle")
+                            }
+                            else
+                            {
+                                <h3 class="mb-0">@ViewData["Title"]</h3>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            @RenderBody()
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @await Html.PartialAsync("/Views/AdminLayout/FooterPartial.cshtml")
+    </div>
+
+    @await Html.PartialAsync("/Views/AdminLayout/ScriptPartial.cshtml")
+    @RenderSection("Scripts", required: false)
+
+
+</body>
+
+</html>

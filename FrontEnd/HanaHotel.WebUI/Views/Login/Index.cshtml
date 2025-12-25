@@ -1,0 +1,71 @@
+﻿@model LoginUserDTO
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html class="h-100" lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link href="~/adminweb/css/style.css" rel="stylesheet" />
+</head>
+
+<body class="h-100">
+    <div id="preloader">...</div>
+
+    <div class="login-form-bg h-100">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100">
+                <div class="col-xl-6">
+                    <div class="form-input-content">
+                        <div class="card login-form mb-0">
+                            <div class="card-body pt-5">
+                                <a class="text-center" href="index.html">
+                                    <h4>Đăng nhập</h4>
+                                </a>
+
+                                @* Show server-side error message *@
+                                @if (TempData["ErrorMessage"] != null)
+                                {
+                                    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                                        @TempData["ErrorMessage"]
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                }
+
+                                <form class="mt-5 mb-5 login-input" method="post" asp-controller="Login" asp-action="Index">
+                                    @Html.AntiForgeryToken()
+                                    <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+                                    <div class="form-group">
+                                        <input asp-for="UserName" class="form-control" placeholder="Tên đăng nhập" />
+                                        <span asp-validation-for="UserName" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" asp-for="Password" class="form-control" placeholder="Mật khẩu" />
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                    </div>
+
+                                    <button class="btn login-form__btn w-100" type="submit">Đăng nhập</button>
+                                </form>
+
+                                <div class="text-center mt-3">
+                                    <p class="text-muted">Chưa có tài khoản? <a href=@Url.Action("Index", "Register") class="text-primary">Đăng ký ngay</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+
+    <script src="~/adminweb/plugins/common/common.min.js"></script>
+    <script src="~/adminweb/js/custom.min.js"></script>
+    <script src="~/adminweb/js/settings.js"></script>
+</body>
+</html>

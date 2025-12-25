@@ -1,0 +1,105 @@
+﻿@model HanaHotel.WebUI.DTOs.UserDTO.UpdateUserDTO
+@using HanaHotel.EntityLayer.Concrete
+
+@{
+    ViewData["Title"] = "Cập nhật người dùng";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Cập nhật thông tin người dùng</h2>
+
+    <form method="post" asp-action="UpdateUser" asp-controller="AdminUser">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Name" class="control-label">Tên</label>
+            <input asp-for="Name" class="form-control" placeholder="Nhập tên..." />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="DateOfBirth" class="control-label">Ngày sinh</label>
+            <input asp-for="DateOfBirth" type="date" class="form-control" />
+            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Gender" class="form-label">Giới tính</label>
+            <select asp-for="Gender" class="form-select" asp-items="@(Html.GetEnumSelectList<GenderType>())"></select>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="UserName" class="control-label">Tên đăng nhập</label>
+            <input asp-for="UserName" class="form-control" placeholder="Nhập tên đăng nhập..." />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Email" class="control-label">Email</label>
+            <input asp-for="Email" class="form-control" placeholder="Nhập email..." />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Phone" class="control-label">Số điện thoại</label>
+            <input asp-for="Phone" class="form-control" placeholder="Nhập số điện thoại..." />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Address" class="control-label">Địa chỉ</label>
+            <input asp-for="Address" class="form-control" placeholder="Nhập địa chỉ..." />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+
+        @* Nếu bạn truyền danh sách roles về ViewBag.Roles (SelectList), sẽ hiển thị dropdown để chỉnh RoleId *@
+        @if (ViewBag.Roles != null)
+        {
+            <div class="form-group mb-3">
+                <label asp-for="RoleId" class="form-label">Vai trò</label>
+                <select asp-for="RoleId" class="form-select" asp-items="ViewBag.Roles"></select>
+                <span asp-validation-for="RoleId" class="text-danger"></span>
+            </div>
+        }
+        else
+        {
+            <input type="hidden" asp-for="RoleId" />
+        }
+
+        <div class="form-group mb-3">
+            <label asp-for="Password" class="control-label">Mật khẩu mới</label>
+            <input asp-for="Password" class="form-control" placeholder="Nhập mật khẩu mới (nếu muốn)..." />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="ConfirmPassword" class="control-label">Xác nhận mật khẩu</label>
+            <input asp-for="ConfirmPassword" class="form-control" placeholder="Nhập lại mật khẩu..." />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+            <a asp-controller="AdminUser" asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+        </div>
+    </form>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .btn {
+        min-width: 120px;
+    }
+</style>

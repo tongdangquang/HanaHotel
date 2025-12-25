@@ -1,0 +1,120 @@
+﻿@model LocationViewModel.Datum
+
+<style>
+    .card {
+        width: 350px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        background-color: #fff;
+        margin: 20px auto;
+        transition: transform 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    .card-header {
+        background-color: #007BFF;
+        color: #fff;
+        padding: 15px;
+        text-align: center;
+    }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .card-details {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .card-details li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+        }
+
+            .card-details li:last-child {
+                border-bottom: none;
+            }
+
+        .card-details strong {
+            color: #333;
+            font-weight: 600;
+        }
+
+    .search-button {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+        .search-button button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            .search-button button:hover {
+                background-color: #218838;
+            }
+
+</style>
+
+@using (Html.BeginForm("Index", "SearchLocationId", FormMethod.Post))
+{
+    <div class="form-group">
+        <label for="cityName">Enter City Name</label>
+        <input type="text" id="cityName" class="form-control" name="cityName" placeholder="City Name" />
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Search City</button>
+}
+
+@if (Model != null)
+{
+    <div class="card mt-4 shadow-sm" style="max-width: 600px; margin: 0 auto; border-radius: 15px; overflow: hidden;">
+        <div class="card-header text-white" style="background-color: #007BFF; padding: 20px; text-align: center;">
+            <h2 style="margin: 0;">@Model.city_name, @Model.country</h2>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <img src="@Model.image_url" alt="@Model.city_name" class="img-fluid w-100" style="border-bottom: 1px solid #ddd;" />
+            <ul class="list-group list-group-flush" style="padding: 20px;">
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Destination ID:</strong> <span>@Model.dest_id</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Search Type:</strong> <span>@Model.search_type</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Label:</strong> <span>@Model.label</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Country Code:</strong> <span>@Model.cc1</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Type:</strong> <span>@Model.type</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Region:</strong> <span>@Model.region</span>
+                </li>
+            </ul>
+        </div>
+        <div class="card-footer text-center" style="background-color: #f8f9fa; padding: 20px;">
+            <a href="@Url.Action("Index", "HanaHotel", new { dest_id = Model.dest_id })" class="btn btn-success" style="padding: 10px 20px; font-size: 18px;">Find Hotels in This City</a>
+        </div>
+    </div>
+}
+

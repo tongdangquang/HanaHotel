@@ -1,0 +1,70 @@
+﻿@model IEnumerable<OutgoingMessagesDTO>
+
+@{
+    ViewData["Title"] = "Tin nhắn đã gửi";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+}
+
+<div class="content-body">
+    <div class="row page-titles mx-0">
+        <div class="col p-md-0">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/AdminContact/Inbox">
+                        <i class="fa fa-arrow-left" aria-hidden="true" style="margin-right: 5px"></i> Hộp thư đến
+                    </a>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        @await Component.InvokeAsync("_ContactSidebarPartial")
+                        <div class="email-right-box">
+                            <div class="email-list m-t-15">
+                                <div class="row">
+                                    @foreach (var contact in Model)
+                                    {
+                                        <div class="col-md-12">
+                                            <div class="card shadow-sm mb-3">
+                                                <a href="@Url.Action("ReadEmail", "AdminContact", new { id = contact.ContactID })" class="stretched-link">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-2 d-flex align-items-center">
+                                                                <label for="responseCheckbox_@contact.ContactID" class="checkbox-label">
+                                                                    @if (contact.IsReplied)
+                                                                    {
+                                                                        <span class="badge badge-success">Đã trả lời</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="badge badge-warning">Chờ xử lý</span>
+                                                                    }
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <h6 class="mb-0">@contact.Email</h6>
+                                                                <p class="text-muted mb-1">@contact.ResponseMessage</p>
+                                                            </div>
+                                                            <div class="col-md-2 text-right">
+                                                                <small class="text-muted">@contact.ResponseDate?.ToString("dd-MM-yyyy")</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

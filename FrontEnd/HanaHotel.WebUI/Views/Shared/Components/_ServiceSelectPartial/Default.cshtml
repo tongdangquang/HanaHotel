@@ -1,0 +1,20 @@
+﻿@model List<ResultServiceDTO>
+@using HanaHotel.WebUI.DTOs.ServiceDTO
+
+@{
+    var services = Model ?? new List<ResultServiceDTO>();
+    int? selectedId = null;
+    if (ViewData["SelectedId"] != null)
+    {
+        selectedId = Convert.ToInt32(ViewData["SelectedId"]);
+    }
+}
+
+<select class="form-select" id="selectService" name="ServiceId">
+    <option value="">(Không chọn)</option>
+    @foreach (var s in services)
+    {
+        var isSel = selectedId.HasValue && selectedId.Value == s.Id;
+        <option value="@s.Id" selected="@(isSel ? "selected" : null)">@s.ServiceName</option>
+    }
+</select>

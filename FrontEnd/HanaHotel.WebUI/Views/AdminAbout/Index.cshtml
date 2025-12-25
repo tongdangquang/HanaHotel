@@ -1,0 +1,84 @@
+﻿@model ResultAboutDTO
+
+@{
+    ViewData["Title"] = "About";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Cập nhật thông tin</h2>
+
+    @if (Model != null)
+    {
+        <form asp-action="Index" asp-controller="AdminAbout" method="post" class="p-4 border rounded shadow-sm bg-light">
+
+            <input type="hidden" asp-for="AboutId" />
+            <input type="hidden" asp-for="RoomCount" />
+            <input type="hidden" asp-for="StaffCount" />
+            <input type="hidden" asp-for="CustomerCount" />
+
+            <div class="mb-3">
+                <label asp-for="Title1" class="form-label">Tiêu đề chính</label>
+                <input asp-for="Title1" class="form-control" placeholder="Nhập tiêu đề chính">
+                <span asp-validation-for="Title1" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Title2" class="form-label">Tiêu đề phụ</label>
+                <input asp-for="Title2" class="form-control" placeholder="Nhập tiêu đề phụ">
+                <span asp-validation-for="Title2" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Content" class="form-label">Nội dung</label>
+                <textarea asp-for="Content" class="form-control" rows="5" placeholder="Nhập nội dung về khách sạn"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+
+            <div class="d-grid gap-2 mt-3">
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+            </div>
+        </form>
+
+        <div class="row mt-4">
+            <div class="col-md-4 mb-3">
+                <label asp-for="RoomCount" class="form-label">Số lượng phòng</label>
+                <input asp-for="RoomCount" class="form-control" type="number" readonly>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label asp-for="StaffCount" class="form-label">Số lượng nhân viên</label>
+                <input asp-for="StaffCount" class="form-control" type="number" readonly>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label asp-for="CustomerCount" class="form-label">Số lượng khách hàng</label>
+                <input asp-for="CustomerCount" class="form-control" type="number" readonly>
+            </div>
+        </div>
+    }
+    else
+    {
+        <form asp-action="Index" asp-controller="AdminAbout" method="post" class="p-4 border rounded shadow-sm bg-light">
+
+            <div class="mb-3">
+                <label for="Title1" class="form-label">Tiêu đề chính</label>
+                <input type="text" id="Title1" name="Title1" class="form-control" placeholder="Nhập tiêu đề chính">
+            </div>
+
+            <div class="mb-3">
+                <label for="Title2" class="form-label">Tiêu đề phụ</label>
+                <input type="text" id="Title2" name="Title2" class="form-control" placeholder="Nhập tiêu đề phụ">
+            </div>
+
+            <div class="mb-3">
+                <label for="Content" class="form-label">Nội dung</label>
+                <textarea id="Content" name="Content" class="form-control" rows="5" placeholder="Nhập nội dung về khách sạn"></textarea>
+            </div>
+
+            <div class="d-grid gap-2 mt-3">
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+            </div>
+        </form>
+    }
+</div>

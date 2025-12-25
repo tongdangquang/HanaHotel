@@ -1,0 +1,20 @@
+﻿@model List<ExhangeViewModel>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Currency</th>
+            <th>Exchange Rate (Buy)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.currency</td>
+                <td>@item.exchange_rate_buy</td>
+            </tr>
+        }
+    </tbody>
+</table>

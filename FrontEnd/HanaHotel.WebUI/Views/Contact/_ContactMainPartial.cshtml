@@ -1,0 +1,102 @@
+﻿@model CreateContactDTO
+
+<div class="container-xxl py-5 bg-light">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title text-center text-primary text-uppercase mb-3">Liên hệ với chúng tôi</h6>
+            <h1 class="display-5 mb-5">Hãy <span class="text-primary text-uppercase">Liên lạc</span> Nếu bạn có bất kỳ câu hỏi nào</h1>
+        </div>
+        <div class="row g-5">
+            <div class="col-lg-4">
+                <div class="d-flex align-items-start">
+                    <i class="fa fa-envelope text-primary display-5 me-3"></i>
+                    <div>
+                        <h5 class="section-title text-start text-primary text-uppercase">Đặt phòng</h5>
+                        <p class="mb-0">book@example.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="d-flex align-items-start">
+                    <i class="fa fa-envelope text-primary display-5 me-3"></i>
+                    <div>
+                        <h5 class="section-title text-start text-primary text-uppercase">Chung</h5>
+                        <p class="mb-0">info@example.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="d-flex align-items-start">
+                    <i class="fa fa-envelope text-primary display-5 me-3"></i>
+                    <div>
+                        <h5 class="section-title text-start text-primary text-uppercase">Hỗ Trợ Kỹ Thuật</h5>
+                        <p class="mb-0">tech@example.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-5 mt-3">
+            <div class="col-md-6">
+                <iframe class="position-relative rounded w-100 h-100 shadow"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1080.9465915502396!2d32.8158717164389!3d39.977642513721456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14d34d9e38968ea1%3A0x7f9cd38033ce4b3!2sAyval%C4%B1%20mahallesi!5e0!3m2!1str!2str!4v1726773174780!5m2!1str!2str"
+                        frameborder="0" style="min-height: 350px; border:0;" allowfullscreen="" aria-hidden="false"
+                        tabindex="0"></iframe>
+            </div>
+
+            <div class="col-md-6">
+                <div class="wow fadeInUp shadow p-4" data-wow-delay="0.2s" style="background-color: white; border-radius: 10px;">
+                    <form method="post" asp-action="Index" asp-controller="Contact">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="name" placeholder="Họ và tên của bạn" asp-for="Name">
+                                    <label for="name">Họ và tên </label>
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" id="email" placeholder="Email của bạn" asp-for="Email">
+                                    <label for="email">Email</label>
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="subject" placeholder="Chủ đề" asp-for="Subject">
+                                    <label for="subject">Chủ đề</label>
+                                    <span asp-validation-for="Subject" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    @Html.DropDownListFor(x => x.MessageCategoryId,
+                                             new List<SelectListItem>
+                                    {
+                                    new SelectListItem { Text = "Select a category", Value = "", Disabled = true, Selected = true }
+                                    }.Concat((List<SelectListItem>)ViewBag.Categories),
+                                             new { @class = "form-control", id = "category" })
+                                    <label for="category">Danh mục</label>
+                                    <span asp-validation-for="MessageCategoryId" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control" placeholder="Nhạp tin nhắn của bạn tại đây" id="message" style="height: 150px" asp-for="Message"></textarea>
+                                    <label for="message">Nội dung tin nhắn</label>
+                                    <span asp-validation-for="Message" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary w-100 py-3" type="submit">Gửi tin nhắn</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

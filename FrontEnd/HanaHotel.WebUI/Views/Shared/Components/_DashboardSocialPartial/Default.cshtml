@@ -1,0 +1,63 @@
+﻿@model Dictionary<string, string>
+
+<div class="row">
+    <div class="col-lg-4 col-sm-6">
+        <a href="https://github.com/hzuslu" target="_blank">
+            <div class="card">
+                <div class="social-graph-wrapper widget-facebook">
+                    <span class="s-icon">
+                        <i class="bi bi-github"></i>
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="pt-3 pb-3 pl-0 pr-0 text-center">
+                            <h4 class="m-1">@Model["Github"]</h4>
+                            <p class="m-0">Người theo dõi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-4 col-sm-6">
+        <a href="https://www.linkedin.com/in/hasan-uslu" target="_blank">
+            <div class="card">
+                <div class="social-graph-wrapper widget-linkedin">
+                    <span class="s-icon">
+                        <i class="bi bi-linkedin"></i>
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="col-12 border-right">
+                        <div class="pt-3 pb-3 pl-0 pr-0 text-center">
+                            <h4 class="m-1">@Model["Linkedin"]</h4>
+                            <p class="m-0">Mối liên kết</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-4 col-sm-6">
+        <a href="https://www.instagram.com/hzuslu" target="_blank">
+            <div class="card">
+                <div class="social-graph-wrapper widget-googleplus">
+                    <span class="s-icon">
+                        <i class="bi bi-instagram"></i>
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="col-12 border-right">
+                        <div class="pt-3 pb-3 pl-0 pr-0 text-center">
+                            <h4 class="m-1">@Model["Instagram"]</h4>
+                            <p class="m-0">Người theo dõi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

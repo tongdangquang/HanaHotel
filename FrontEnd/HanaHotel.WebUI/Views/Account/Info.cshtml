@@ -1,0 +1,90 @@
+﻿@using HanaHotel.EntityLayer.Concrete
+@model HanaHotel.EntityLayer.Concrete.User
+@{
+    Layout = null;
+    ViewBag.Title = "Thông tin tài khoản";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+
+@await Component.InvokeAsync("_HeadPartial")
+
+<body>
+    <div class="container-xxl bg-white p-0">
+
+        @await Component.InvokeAsync("_SpinnerPartial")
+
+        @await Component.InvokeAsync("_NavbarPartial")
+
+        <div class="container py-4">
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Default" asp-action="Index">Trang chủ</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Thông tin tài khoản</li>
+                </ol>
+            </nav>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">Thông tin tài khoản</h4>
+                </div>
+
+                <div class="card-body">
+                    <dl class="row mb-3">
+                        <dt class="col-sm-3">Tên đăng nhập</dt>
+                        <dd class="col-sm-9">@Model.UserName</dd>
+
+                        <dt class="col-sm-3">Email</dt>
+                        <dd class="col-sm-9">@(!string.IsNullOrWhiteSpace(Model.Email) ? Model.Email : "-")</dd>
+
+                        <dt class="col-sm-3">Họ & tên</dt>
+                        <dd class="col-sm-9">@Model.Name</dd>
+
+                        <dt class="col-sm-3">Ngày sinh</dt>
+                        <dd class="col-sm-9">@Model.DateOfBirth.ToString("dd/MM/yyyy")</dd>
+
+                        <dt class="col-sm-3">Giới tính</dt>
+                        <dd class="col-sm-9">
+                            @{
+                                var genderText = Model.Gender switch
+                                {
+                                    GenderType.Male => "Nam",
+                                    GenderType.Female => "Nữ",
+                                };
+                            }
+                            @genderText
+                        </dd>
+
+                        <dt class="col-sm-3">Địa chỉ</dt>
+                        <dd class="col-sm-9">@(!string.IsNullOrWhiteSpace(Model.Address) ? Model.Address : "-")</dd>
+
+                        <dt class="col-sm-3">Số điện thoại</dt>
+                        <dd class="col-sm-9">@(!string.IsNullOrWhiteSpace(Model.PhoneNumber) ? Model.PhoneNumber : "-")</dd>
+
+                        <dt class="col-sm-3">Vai trò</dt>
+                        <dd class="col-sm-9">@((string?)ViewBag.Role ?? $"RoleId: {Model.RoleId}")</dd>
+                    </dl>
+
+                    <hr />
+
+                    <div class="d-flex gap-2">
+                        <a asp-controller="Account" asp-action="Logout" class="btn btn-outline-danger"
+                           onclick="return confirm('Bạn có chắc muốn đăng xuất?');">Đăng xuất</a>
+
+                        <a asp-controller="Account" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Chỉnh sửa thông tin</a>
+
+                        <a asp-controller="Default" asp-action="Index" class="btn btn-secondary ms-auto">Quay lại</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @await Component.InvokeAsync("_FooterPartial")
+
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    @await Component.InvokeAsync("_ScriptsPartial")
+</body>
+</html>

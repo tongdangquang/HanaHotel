@@ -1,0 +1,72 @@
+﻿@model IEnumerable<InboxContactDTO>
+
+@{
+    ViewData["Title"] = "Hộp thư đến";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+}
+
+<div class="content-body">
+    <div class="row page-titles mx-0">
+        <div class="col p-md-0">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/AdminContact/Inbox">
+                        <i class="fa fa-arrow-left" aria-hidden="true" style="margin-right: 5px"></i> Hộp thư đến
+                    </a>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        @await Component.InvokeAsync("_ContactSidebarPartial")
+                        <div class="email-right-box">
+                            <div class="email-list m-t-15">
+                                <div class="row">
+                                    @if (Model != null && Model.Any())
+                                    {
+                                        @foreach (var contact in Model)
+                                        {
+                                            <div class="col-md-12">
+                                                <div class="card shadow-sm mb-3">
+                                                    <a href="@Url.Action("ReadEmail", "AdminContact", new { id = contact.ContactID })" class="stretched-link">
+                                                        <div class="card-body">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-md-8">
+                                                                    <h6 class="mb-1 font-weight-bold">@contact.Subject</h6>
+                                                                    <p class="mb-0 text-muted">Gửi vào: @contact.Date.ToString("dd-MM-yyyy")</p>
+                                                                </div>
+                                                                <div class="col-md-3 text-right">
+                                                                    @if (contact.IsReplied)
+                                                                    {
+                                                                        <span class="badge badge-success">Đã trả lời</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="badge badge-warning">Chờ xử lý</span>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted">Không có tin nhắn nào.</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,435 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v8.0
+build_property.RootNamespace = HanaHotel.WebUI
+build_property.RootNamespace = HanaHotel.WebUI
+build_property.ProjectDir = D:\Documents\Do_an_chuyen_nganh_HaUI\HanaHotel\FrontEnd\HanaHotel.WebUI\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = true
+build_property.MSBuildProjectDirectory = D:\Documents\Do_an_chuyen_nganh_HaUI\HanaHotel\FrontEnd\HanaHotel.WebUI
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/About/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWJvdXRcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Account/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Account/Info.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxJbmZvLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminAbout/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5BYm91dFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminBooking/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Cb29raW5nXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminBooking/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Cb29raW5nXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminBooking/UpdateBooking.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Cb29raW5nXFVwZGF0ZUJvb2tpbmcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminBooking/_BookingDetailsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Cb29raW5nXF9Cb29raW5nRGV0YWlsc1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminContact/Inbox.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Db250YWN0XEluYm94LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminContact/OutgoingMessages.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Db250YWN0XE91dGdvaW5nTWVzc2FnZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminContact/ReadEmail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Db250YWN0XFJlYWRFbWFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminContact/SendEmail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Db250YWN0XFNlbmRFbWFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminDashboard/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5EYXNoYm9hcmRcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminDashboard/_DashboardContactPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5EYXNoYm9hcmRcX0Rhc2hib2FyZENvbnRhY3RQYXJ0aWFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminDashboard/_DashboardSocialPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5EYXNoYm9hcmRcX0Rhc2hib2FyZFNvY2lhbFBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminDashboard/_DashboardWidgetPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5EYXNoYm9hcmRcX0Rhc2hib2FyZFdpZGdldFBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminHotel/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Ib3RlbFxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminHotel/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Ib3RlbFxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminHotel/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Ib3RlbFxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminHotel/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Ib3RlbFxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminHotel/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Ib3RlbFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminLayout/FooterPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5MYXlvdXRcRm9vdGVyUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminLayout/HeaderPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5MYXlvdXRcSGVhZGVyUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminLayout/HeadPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5MYXlvdXRcSGVhZFBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminLayout/NavheaderPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5MYXlvdXRcTmF2aGVhZGVyUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminLayout/PreloaderPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5MYXlvdXRcUHJlbG9hZGVyUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminLayout/ScriptPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5MYXlvdXRcU2NyaXB0UGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminLayout/SidebarPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5MYXlvdXRcU2lkZWJhclBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminLayout/_AdminLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5MYXlvdXRcX0FkbWluTGF5b3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminReport/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5SZXBvcnRcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminRoleAssign/EditRole.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Sb2xlQXNzaWduXEVkaXRSb2xlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminRoleAssign/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Sb2xlQXNzaWduXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminRole/AddRole.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Sb2xlXEFkZFJvbGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminRole/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Sb2xlXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminRole/UpdateRole.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Sb2xlXFVwZGF0ZVJvbGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminRoom/AddRoom.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Sb29tXEFkZFJvb20uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminRoom/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Sb29tXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminRoom/UpdateRoom.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Sb29tXFVwZGF0ZVJvb20uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminUser/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Vc2VyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/AdminUser/UpdateUser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Vc2VyXFVwZGF0ZVVzZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Booking/EditCustomer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9va2luZ1xFZGl0Q3VzdG9tZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Booking/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9va2luZ1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Booking/MyBookings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9va2luZ1xNeUJvb2tpbmdzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Booking/_AddBookingMinimizePartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9va2luZ1xfQWRkQm9va2luZ01pbmltaXplUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Booking/_AddBookingPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9va2luZ1xfQWRkQm9va2luZ1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Booking/_AvailableRoomsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9va2luZ1xfQXZhaWxhYmxlUm9vbXNQYXJ0aWFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Contact/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29udGFjdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Contact/_ContactMainPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29udGFjdFxfQ29udGFjdE1haW5QYXJ0aWFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Contact/_ContactPageHeaderPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29udGFjdFxfQ29udGFjdFBhZ2VIZWFkZXJQYXJ0aWFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Default/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVmYXVsdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Error/Error404.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXJyb3JcRXJyb3I0MDQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Login/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Payment/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5bWVudFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Payment/Result.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5bWVudFxSZXN1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Promotion/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvbW90aW9uXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Promotion/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvbW90aW9uXERldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Promotion/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvbW90aW9uXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Promotion/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvbW90aW9uXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Register/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVnaXN0ZXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Review/AddReview.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmV2aWV3XEFkZFJldmlldy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Review/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmV2aWV3XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Review/UpdateReview.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmV2aWV3XFVwZGF0ZVJldmlldy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Room/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxEZXRhaWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Room/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Room/_RoomCoverPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxfUm9vbUNvdmVyUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Room/_RoomGridPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9vbVxfUm9vbUdyaWRQYXJ0aWFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Service/AddService.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZVxBZGRTZXJ2aWNlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Service/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Service/UpdateService.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZVxVcGRhdGVTZXJ2aWNlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/RoomCover/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcUm9vbUNvdmVyXERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_AboutUsPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX0Fib3V0VXNQYXJ0aWFsXERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_BookingCoverPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX0Jvb2tpbmdDb3ZlclBhcnRpYWxcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_ContactSidebarPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX0NvbnRhY3RTaWRlYmFyUGFydGlhbFxEZWZhdWx0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_DashboardContactPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX0Rhc2hib2FyZENvbnRhY3RQYXJ0aWFsXERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_DashboardHeadPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX0Rhc2hib2FyZEhlYWRQYXJ0aWFsXERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_DashboardScriptPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX0Rhc2hib2FyZFNjcmlwdFBhcnRpYWxcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_DashboardSocialPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX0Rhc2hib2FyZFNvY2lhbFBhcnRpYWxcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_DashboardStaffPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX0Rhc2hib2FyZFN0YWZmUGFydGlhbFxEZWZhdWx0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_DashboardWidgetPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX0Rhc2hib2FyZFdpZGdldFBhcnRpYWxcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_FooterPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX0Zvb3RlclBhcnRpYWxcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_HeadPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX0hlYWRQYXJ0aWFsXERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_NavbarPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX05hdmJhclBhcnRpYWxcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_OurRoomsPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX091clJvb21zUGFydGlhbFxEZWZhdWx0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_OurRoomsPartial/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX091clJvb21zUGFydGlhbFxFcnJvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_ReservationPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX1Jlc2VydmF0aW9uUGFydGlhbFxEZWZhdWx0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_ReviewPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX1Jldmlld1BhcnRpYWxcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_ReviewPartial/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX1Jldmlld1BhcnRpYWxcRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_RoomCoverPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX1Jvb21Db3ZlclBhcnRpYWxcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_RoomSelectPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX1Jvb21TZWxlY3RQYXJ0aWFsXERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_ScriptsPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX1NjcmlwdHNQYXJ0aWFsXERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_ServicePartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX1NlcnZpY2VQYXJ0aWFsXERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_ServiceSelectPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX1NlcnZpY2VTZWxlY3RQYXJ0aWFsXERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_SliderPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX1NsaWRlclBhcnRpYWxcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_SpinnerPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX1NwaW5uZXJQYXJ0aWFsXERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/Components/_TrailerPartial/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcX1RyYWlsZXJQYXJ0aWFsXERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Documents/Do_an_chuyen_nganh_HaUI/HanaHotel/FrontEnd/HanaHotel.WebUI/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-kdndmjmhun

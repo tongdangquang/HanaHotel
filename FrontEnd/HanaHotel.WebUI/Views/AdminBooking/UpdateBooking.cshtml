@@ -1,0 +1,225 @@
+﻿@model HanaHotel.WebUI.DTOs.BookingDTO.UpdateBookingDTO
+@using HanaHotel.EntityLayer.Concrete
+
+@{
+    ViewData["Title"] = "Cập nhật đặt phòng";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+
+    var fullBooking = ViewBag.FullBooking as Booking;
+    var roomName = ViewBag.RoomName as string;
+    BookingStatus statusForBadge = Model?.Status ?? (fullBooking != null ? fullBooking.Status : BookingStatus.Pending);
+
+    string statusText =
+        statusForBadge == BookingStatus.Pending ? "Đang chờ" :
+        statusForBadge == BookingStatus.Deposited ? "Đã đặt cọc" :
+        statusForBadge == BookingStatus.Paid ? "Đã thanh toán" :
+        statusForBadge == BookingStatus.Confirmed ? "Đã xác nhận" :
+        statusForBadge == BookingStatus.Cancelled ? "Đã hủy" :
+        statusForBadge == BookingStatus.Completed ? "Hoàn thành" : "Không xác định";
+
+    string statusClass =
+        statusForBadge == BookingStatus.Pending ? "badge bg-warning text-dark" :
+        statusForBadge == BookingStatus.Deposited ? "badge bg-info text-dark" :
+        statusForBadge == BookingStatus.Paid ? "badge bg-secondary text-white" :
+        statusForBadge == BookingStatus.Confirmed ? "badge bg-success" :
+        statusForBadge == BookingStatus.Cancelled ? "badge bg-danger" :
+        statusForBadge == BookingStatus.Completed ? "badge bg-primary" : "badge bg-secondary";
+
+    // original status string for client-side comparison
+    var originalStatusString = (fullBooking != null ? fullBooking.Status : Model?.Status).ToString();
+    var roomDetails = ViewBag.RoomDetails as IEnumerable<dynamic>; // optional: controller may provide room details
+}
+
+<div class="container mt-3">
+    <h3>@ViewData["Title"]</h3>
+
+    @if (fullBooking != null)
+    {
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="row gx-3 align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="mb-1">@fullBooking.FullName</h5>
+                        <div class="">
+                            @fullBooking.Email
+                            @if (!string.IsNullOrEmpty(fullBooking.Phone))
+                            {
+                                <span> - @fullBooking.Phone</span>
+                            }
+                        </div>
+                        <div class="mt-2">
+                            <div>Ngày đặt: @fullBooking.BookingDate.ToString("dd/MM/yyyy")</div>
+                            <div>Ngày nhận: @fullBooking.CheckInDate.ToString("dd/MM/yyyy")</div>
+                            <div>Ngày trả: @fullBooking.CheckOutDate.ToString("dd/MM/yyyy")</div>
+                            <div>Phòng: @(string.IsNullOrEmpty(roomName) ? ("ID: " + fullBooking.RoomId.ToString()) : roomName)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div>
+                            <p>Trạng thái: <span class="@statusClass fs-6 px-3 py-2">@statusText</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                @* Room details (if controller passed a richer collection) *@
+                @if (roomDetails != null && roomDetails.Any())
+                {
+                    <hr />
+                    <div>
+                        <strong>Chi tiết phòng:</strong>
+                        <div class="list-group list-group-flush mt-2">
+                            @foreach (var rd in roomDetails)
+                            {
+                                <div class="list-group-item d-flex justify-content-between align-items-start p-2">
+                                    <div>
+                                        <div class="fw-bold">@rd.RoomName</div>
+                                        <div class="small text-muted">Số lượng: @rd.Quantity · Người lớn: @rd.AdultAmount · Trẻ em: @rd.ChildrenAmount</div>
+                                    </div>
+                                    <div class="fw-semibold text-warning">@String.Format("{0:N0} đ", (decimal)rd.Price)</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(fullBooking.AdditionalRequest))
+                {
+                    <hr />
+                    <div>
+                        <strong>Yêu cầu đặc biệt:</strong>
+                        <div class="mt-1">@fullBooking.AdditionalRequest</div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-secondary">Không có thông tin chi tiết đặt phòng để hiển thị.</div>
+    }
+
+    <form method="post" asp-action="UpdateBooking" asp-controller="AdminBooking" id="adminUpdateForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group mb-3">
+            <label asp-for="CheckInDate" class="form-label">Ngày nhận phòng</label>
+            <input asp-for="CheckInDate" type="date" class="form-control" />
+            <span asp-validation-for="CheckInDate" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="CheckOutDate" class="form-label">Ngày trả phòng</label>
+            <input asp-for="CheckOutDate" type="date" class="form-control" />
+            <span asp-validation-for="CheckOutDate" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <div class="d-flex align-items-center mb-2">
+                <label class="form-label me-2 mb-0">Trạng thái</label>
+                <span id="statusChangedBadge" class="badge bg-warning text-dark ms-2 d-none">Đang thay đổi</span>
+            </div>
+
+            <div class="btn-group" role="group" aria-label="Trạng thái" id="statusBtnGroup">
+                <label class="btn btn-outline-warning @(Model.Status == BookingStatus.Pending ? "active" : "") me-1" data-status="Pending">
+                    <input asp-for="Status" type="radio" value="Pending" autocomplete="off" hidden /> Chờ xử lý
+                </label>
+                <label class="btn btn-outline-info @(Model.Status == BookingStatus.Deposited ? "active" : "") me-1" data-status="Deposited">
+                    <input asp-for="Status" type="radio" value="Deposited" autocomplete="off" hidden /> Đã đặt cọc
+                </label>
+                <label class="btn btn-outline-secondary @(Model.Status == BookingStatus.Paid ? "active" : "") me-1" data-status="Paid">
+                    <input asp-for="Status" type="radio" value="Paid" autocomplete="off" hidden /> Đã thanh toán
+                </label>
+                <label class="btn btn-outline-success @(Model.Status == BookingStatus.Confirmed ? "active" : "") me-1" data-status="Confirmed">
+                    <input asp-for="Status" type="radio" value="Confirmed" autocomplete="off" hidden /> Đã xác nhận
+                </label>
+                <label class="btn btn-outline-danger @(Model.Status == BookingStatus.Cancelled ? "active" : "") me-1" data-status="Cancelled">
+                    <input asp-for="Status" type="radio" value="Cancelled" autocomplete="off" hidden /> Đã hủy
+                </label>
+                <label class="btn btn-outline-primary @(Model.Status == BookingStatus.Completed ? "active" : "")" data-status="Completed">
+                    <input asp-for="Status" type="radio" value="Completed" autocomplete="off" hidden /> Hoàn thành
+                </label>
+            </div>
+
+            <span asp-validation-for="Status" class="text-danger d-block mt-1"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="AdditionalRequest" class="form-label">Yêu cầu đặc biệt</label>
+            <textarea asp-for="AdditionalRequest" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-dark">Cập nhật đặt phòng</button>
+            <a asp-controller="AdminBooking" asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            // original status from server
+            const originalStatus = '@originalStatusString';
+            const statusGroup = document.getElementById('statusBtnGroup');
+            if (!statusGroup) return;
+            const labels = Array.from(statusGroup.querySelectorAll('label.btn'));
+            const changedBadge = document.getElementById('statusChangedBadge');
+
+            // helper to set active label by value and ensure radio is checked
+            function setActiveByValue(value, markChange) {
+                labels.forEach(lbl => {
+                    const input = lbl.querySelector('input[type="radio"]');
+                    if (!input) return;
+                    const val = input.value;
+                    if (val === value) {
+                        lbl.classList.add('active');
+                        input.checked = true;
+                    } else {
+                        lbl.classList.remove('active');
+                        input.checked = false;
+                    }
+                });
+                if (markChange) {
+                    if (value !== originalStatus) {
+                        changedBadge.classList.remove('d-none');
+                    } else {
+                        changedBadge.classList.add('d-none');
+                    }
+                }
+            }
+
+            // initialize: ensure correct active based on checked input (server-rendered)
+            const checkedInput = statusGroup.querySelector('input[type="radio"]:checked');
+            if (checkedInput) {
+                setActiveByValue(checkedInput.value, false);
+            } else {
+                // fallback to original
+                setActiveByValue(originalStatus, false);
+            }
+
+            // attach click handlers so selection persists after click (not only on hover)
+            labels.forEach(lbl => {
+                // allow keyboard selection as well
+                lbl.setAttribute('tabindex', '0');
+                lbl.addEventListener('click', function (e) {
+                    const input = this.querySelector('input[type="radio"]');
+                    if (!input) return;
+                    setActiveByValue(input.value, true);
+                });
+                lbl.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+
+            // also watch for change events on inputs (in case user manipulates via devtools)
+            statusGroup.querySelectorAll('input[type="radio"]').forEach(inp => {
+                inp.addEventListener('change', function () {
+                    setActiveByValue(this.value, true);
+                });
+            });
+        })();
+    </script>
+}

@@ -1,0 +1,64 @@
+﻿@using HanaHotel.WebUI.DTOs.ReviewDTO
+@model List<ResultReviewDTO>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="container-xxl review my-5 py-5 bg-dark wow zoomIn" data-wow-delay="0.1s">
+        <div class="container text-center">
+            <p class="text-white mb-0">Chưa có đánh giá nào.</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container-xxl review my-5 py-5 bg-dark wow zoomIn" data-wow-delay="0.1s">
+        <div class="container">
+            <div class="owl-carousel review-carousel py-5">
+                @foreach (var item in Model)
+                {
+                    <div class="review-item position-relative bg-white rounded overflow-hidden p-4">
+                        <div class="mb-3">
+                            @if (!string.IsNullOrWhiteSpace(item.Content))
+                            {
+                                <p class="mb-2">@item.Content</p>
+                            }
+                            else
+                            {
+                                <p class="mb-2 text-muted">Không có nội dung đánh giá.</p>
+                            }
+
+                            <div>
+                                @{
+                                    var stars = (int)Math.Round(item.RatingStars);
+                                    if (stars < 0) stars = 0;
+                                    if (stars > 5) stars = 5;
+                                }
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= stars)
+                                    {
+                                        <i class="fa fa-star text-primary me-1"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-star text-secondary me-1"></i>
+                                    }
+                                }
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center mt-3">
+                            <img class="img-fluid flex-shrink-0 rounded" src="~/Hotel-html-template/img/avatar-placeholder.jpg" style="width:45px; height:45px;" alt="avatar" />
+                            <div class="ps-3">
+                                <h6 class="fw-bold mb-1">Người dùng #@item.UserId</h6>
+                                <small class="text-muted">Phòng: @item.RoomId</small>
+                            </div>
+                        </div>
+
+                        <i class="fa fa-quote-right fa-3x text-primary position-absolute end-0 bottom-0 me-4 mb-n1"></i>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

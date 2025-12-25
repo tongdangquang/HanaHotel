@@ -1,0 +1,49 @@
+﻿@model IEnumerable<HanaHotel.DtoLayer.DTOs.HotelDTO.HotelDto>
+
+@{
+    ViewBag.Title = "Quản lý khách sạn - Hana Hotel";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+}
+
+<div class="container py-5">
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
+    </p>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Mã</th>
+                <th>Tên</th>
+                <th>Địa chỉ</th>
+                <th>Điện thoại</th>
+                <th>Số phòng</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var h in Model)
+            {
+                <tr>
+                    <td>@h.Id</td>
+                    <td>@h.HotelName</td>
+                    <td>@h.Address</td>
+                    <td>@h.PhoneNumber</td>
+                    <td>@(h.HotelDetails?.Count ?? 0)</td>
+                    <td>@(h.Status == 0 ? "Mở" : (h.Status == 1 ? "Đóng" : "Bảo trì"))</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@h.Id" class="btn btn-info btn-sm me-1">Chi tiết</a>
+                        <a asp-action="Edit" asp-route-id="@h.Id" class="btn btn-warning btn-sm me-1">Sửa</a>
+                        <a asp-action="Delete" asp-route-id="@h.Id" class="btn btn-danger btn-sm">Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

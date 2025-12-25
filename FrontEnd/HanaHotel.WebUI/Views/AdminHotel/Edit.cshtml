@@ -1,0 +1,120 @@
+﻿@model HanaHotel.DtoLayer.DTOs.HotelDTO.HotelDto
+
+@{
+    ViewBag.Title = "Sửa khách sạn - Hana Hotel";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+
+    // support both ViewBag.Users or ViewBag.ManagerId (fallback) and avoid null
+    var users = (ViewBag.Users as List<HanaHotel.DtoLayer.DTOs.HotelDTO.UserDto>)
+                ?? (ViewBag.ManagerId as List<HanaHotel.DtoLayer.DTOs.HotelDTO.UserDto>)
+                ?? new List<HanaHotel.DtoLayer.DTOs.HotelDTO.UserDto>();
+
+    var rooms = ViewBag.Rooms as List<HanaHotel.DtoLayer.DTOs.HotelDTO.RoomDto> ?? new List<HanaHotel.DtoLayer.DTOs.HotelDTO.RoomDto>();
+    var selectedRoomIds = ViewBag.SelectedRoomIds as List<int> ?? new List<int>();
+    var roomCountsMap = ViewBag.RoomCounts as Dictionary<int,int> ?? new Dictionary<int,int>();
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group">
+                    <label asp-for="HotelName"></label>
+                    <input asp-for="HotelName" class="form-control" />
+                    <span asp-validation-for="HotelName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Người quản lý</label>
+                    <select asp-for="Manager.Id" class="form-select form-control">
+                        <option value="">-- Chọn người quản lý --</option>
+                        @foreach (var u in users)
+                        {
+                            if (u != null)
+                            {
+                                <option value="@u.Id" selected>@u.Name (@u.Email)</option>
+                            }
+                        }
+                    </select>
+                    <small class="form-text text-muted">Chọn người quản lý từ danh sách.</small>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Size">Kích thước (m²)</label>
+                    <input asp-for="Size" class="form-control" type="number" step="0.1" />
+                    <span asp-validation-for="Size" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Address">Địa chỉ</label>
+                    <input asp-for="Address" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhoneNumber">Số điện thoại</label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="EmployeeCount">Số lượng nhân viên</label>
+                    <input asp-for="EmployeeCount" class="form-control" type="number" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Chọn phòng thuộc khách sạn (danh sách)</label>
+                    <div class="row g-2">
+                        @foreach (var r in rooms)
+                        {
+                            var isChecked = selectedRoomIds.Contains(r.Id);
+                            var cnt = roomCountsMap.ContainsKey(r.Id) ? roomCountsMap[r.Id] : 1;
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="form-check mb-0">
+                                        <input class="form-check-input room-checkbox" type="checkbox" name="SelectedRoomIds" value="@r.Id" id="rm@r.Id" @(isChecked ? "checked" : "") />
+                                        <label class="form-check-label ms-2" for="rm@r.Id">@r.RoomName (@r.BedCount) - @r.Price.ToString("N0")</label>
+                                    </div>
+                                    <input type="number" name="RoomCount_@r.Id" min="1" value="@cnt" class="form-control form-control-sm room-count-input" style="width:84px;" @(isChecked ? "" : "disabled") />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <small class="form-text text-muted">Chọn các phòng và nhập số lượng mỗi loại cho khách sạn.</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Lưu</button>
+                <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+            </form>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <img src="~/images/hotel-hero.jpg" class="card-img-top" alt="Hana Hotel" onerror="this.style.display='none'" />
+                <div class="card-body">
+                    <h5 class="card-title">Hướng dẫn</h5>
+                    <p class="card-text">Chỉnh sửa thông tin, thay đổi người quản lý và chọn phòng cho khách sạn.</p>
+                    <a href="@Url.Action("Index", "AdminHotel")" class="btn btn-outline-primary">Danh sách khách sạn</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // enable/disable corresponding count input when checkbox toggled
+        (function () {
+            document.querySelectorAll('.room-checkbox').forEach(cb => {
+                cb.addEventListener('change', function () {
+                    const id = this.value;
+                    const count = document.querySelector('input[name="RoomCount_' + id + '"]');
+                    if (count) count.disabled = !this.checked;
+                });
+                // initialize state
+                const ev = new Event('change');
+                cb.dispatchEvent(ev);
+            });
+        })();
+    </script>
+}

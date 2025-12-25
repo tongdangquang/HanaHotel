@@ -1,0 +1,263 @@
+﻿@model List<HanaHotel.WebUI.DTOs.RoomDTO.ResultRoomDTO>
+@{
+    Layout = null;
+    var firstRoom = Model.FirstOrDefault();
+
+    // Read raw query values
+    var hotelName = Context.Request.Query["hotelName"].ToString();
+    var roomName = Context.Request.Query["roomName"].ToString();
+    var bedCount = Context.Request.Query["bedCount"].ToString();
+
+    // parse checkIn/checkOut with sensible defaults: today / today + 1
+    DateTime checkInDate;
+    DateTime checkOutDate;
+    var checkInRaw = Context.Request.Query["checkIn"].ToString();
+    var checkOutRaw = Context.Request.Query["checkOut"].ToString();
+    if (!DateTime.TryParse(checkInRaw, out checkInDate))
+    {
+        checkInDate = DateTime.Today;
+    }
+    if (!DateTime.TryParse(checkOutRaw, out checkOutDate) || checkOutDate <= checkInDate)
+    {
+        checkOutDate = checkInDate.AddDays(1);
+    }
+    var checkIn = checkInDate.ToString("yyyy-MM-dd");
+    var checkOut = checkOutDate.ToString("yyyy-MM-dd");
+
+    var minSize = Context.Request.Query["minSize"].ToString();
+    var maxPrice = Context.Request.Query["maxPrice"].ToString();
+    var hotels = ViewBag.Hotels as List<string> ?? new List<string>();
+    var roomNames = ViewBag.RoomNames as List<string> ?? new List<string>();
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+
+@await Component.InvokeAsync("_HeadPartial")
+@await Component.InvokeAsync("_NavbarPartial")
+@await Component.InvokeAsync("_RoomCoverPartial")
+
+<body>
+    <div class="container-xxl bg-white p-0">
+
+        @await Component.InvokeAsync("_SpinnerPartial")
+
+        <!-- Back to top button -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top" title="Lên đầu trang">
+            <i class="bi bi-arrow-up"></i>
+        </a>
+
+        <!-- Danh sách phòng (grid) -->
+        <div class="container my-2">
+            <form id="roomSearchForm" method="get" asp-controller="Room" asp-action="Index" class="row g-2 mb-4">
+                <div class="col-md-3 position-relative">
+                    <label class="form-label small" for="hotelInput">Khách sạn</label>
+                    <div class="dropdown w-100">
+                        <input name="hotelName" id="hotelInput" value="@hotelName" class="form-control" autocomplete="off" />
+                        <ul class="dropdown-menu w-100" id="hotelMenu" role="listbox" aria-labelledby="hotelInput">
+                            @{
+                                var first = true;
+                                foreach (var h in hotels)
+                                {
+                                    if (first)
+                                    {
+                                        <li><button type="button" class="dropdown-item active text-dark" data-value="@h" aria-selected="true">@h</button></li>;
+                                        first = false;
+                                    }
+                                    else
+                                    {
+                                        <li><button type="button" class="dropdown-item text-dark" data-value="@h">@h</button></li>;
+                                    }
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3 position-relative">
+                    <label class="form-label small" for="roomInput">Loại phòng</label>
+                    <div class="dropdown w-100">
+                        <input name="roomName" id="roomInput" value="@roomName" class="form-control" autocomplete="off" />
+                        <ul class="dropdown-menu w-100" id="roomMenu" role="listbox" aria-labelledby="roomInput">
+                            <li><button type="button" class="dropdown-item text-dark" data-value=""></button></li>
+                            @foreach (var rn in roomNames)
+                            {
+                                <li><button type="button" class="dropdown-item text-dark" data-value="@rn">@rn</button></li>;
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small" for="checkIn">Nhận phòng</label>
+                    <input type="date" name="checkIn" id="checkIn" value="@checkIn" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small" for="checkOut">Trả phòng</label>
+                    <input type="date" name="checkOut" id="checkOut" value="@checkOut" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small" for="minSize">Diện tích tối thiểu (m²)</label>
+                    <input type="number" step="0.1" name="minSize" id="minSize" value="@minSize" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small" for="bedCount">Số giường tối đa</label>
+                    <input type="number" name="bedCount" id="bedCount" value="@bedCount" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small" for="maxPrice">Giá tối đa (đ)</label>
+                    <input type="number" step="1000" name="maxPrice" id="maxPrice" value="@maxPrice" class="form-control" />
+                </div>
+
+                <div class="col-md-3 text-center text-center d-flex flex-row gap-2" style="margin-top: 39px;">
+                    <button type="submit" class="btn btn-primary w-50">Tìm phòng</button>
+                    <button type="button" id="resetSearchBtn" class="btn btn-outline-secondary w-50">Làm mới</button>
+                </div>
+            </form>
+
+            <div id="roomGrid">
+                @await Html.PartialAsync("_RoomGridPartial", Model ?? new List<HanaHotel.WebUI.DTOs.RoomDTO.ResultRoomDTO>())
+            </div>
+        </div>
+
+    </div>
+
+    @await Component.InvokeAsync("_FooterPartial")
+    @await Component.InvokeAsync("_ScriptsPartial")
+
+    <style>
+        /* dropdown-menu styling for searchable lists */
+        #hotelMenu, #roomMenu {
+            max-height: 240px;
+            overflow: auto;
+        }
+
+            /* ensure dropdown items wrap nicely */
+            #hotelMenu .dropdown-item, #roomMenu .dropdown-item {
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+    </style>
+
+    <script>
+        (function () {
+            // Generic searchable dropdown logic (reuse if you have it)
+            function setupSearchable(inputId, menuId) {
+                const input = document.getElementById(inputId);
+                const menu = document.getElementById(menuId);
+                if (!input || !menu) return;
+
+                const items = Array.from(menu.querySelectorAll('.dropdown-item'));
+                const openMenu = () => {
+                    menu.classList.add('show');
+                    input.setAttribute('aria-expanded', 'true');
+                };
+                const closeMenu = () => {
+                    setTimeout(() => {
+                        menu.classList.remove('show');
+                        input.setAttribute('aria-expanded', 'false');
+                    }, 150);
+                };
+
+                input.addEventListener('input', function () {
+                    const q = (this.value || '').trim().toLowerCase();
+                    let any = false;
+                    items.forEach(it => {
+                        const v = (it.getAttribute('data-value') || it.textContent || '').toLowerCase();
+                        const show = v.indexOf(q) !== -1;
+                        it.style.display = show ? '' : 'none';
+                        any = any || show;
+                    });
+                    if (q.length === 0) {
+                        items.forEach(it => it.style.display = '');
+                        any = items.length > 0;
+                    }
+                    if (any) openMenu(); else closeMenu();
+                });
+
+                items.forEach(it => {
+                    it.addEventListener('click', function (e) {
+                        const v = this.getAttribute('data-value') || this.textContent;
+                        input.value = v;
+                        closeMenu();
+                    });
+                });
+
+                input.addEventListener('focus', function () {
+                    items.forEach(it => it.style.display = '');
+                    openMenu();
+                });
+                input.addEventListener('blur', function () {
+                    closeMenu();
+                });
+
+                input.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') {
+                        const visible = items.find(it => it.style.display !== 'none');
+                        if (visible) {
+                            e.preventDefault();
+                            visible.click();
+                        }
+                    }
+                });
+            }
+
+            // If you implemented dropdown menus, init them here (ids must match)
+            setupSearchable('hotelInput', 'hotelMenu');
+            setupSearchable('roomInput', 'roomMenu');
+
+            // AJAX search: intercept form submit and fetch partial HTML
+            const form = document.getElementById('roomSearchForm');
+            const roomGrid = document.getElementById('roomGrid');
+            if (form && roomGrid) {
+                form.addEventListener('submit', async function (e) {
+                    e.preventDefault();
+
+                    // build query params from form elements
+                    const params = new URLSearchParams(new FormData(form));
+                    // call Index endpoint (AJAX header for server-side partial detection)
+                    try {
+                        const resp = await fetch(`${window.location.origin}/Room/Index?${params.toString()}`, {
+                            method: 'GET',
+                            credentials: 'same-origin',
+                            headers: {
+                                'Accept': 'text/html',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+                        if (!resp.ok) {
+                            console.error('Search failed', resp.status);
+                            return;
+                        }
+                        const html = await resp.text();
+                        roomGrid.innerHTML = html;
+                        // re-init any client-side behavior for new content (carousels / buttons)
+                    } catch (err) {
+                        console.error(err);
+                    }
+                });
+
+                // Reset button: clear filters, reset dates, then trigger AJAX search
+                const resetBtn = document.getElementById('resetSearchBtn');
+                if (resetBtn) {
+                    resetBtn.addEventListener('click', function () {
+                        form.querySelectorAll('input[name="hotelName"], input[name="roomName"], input[name="bedCount"], input[name="minSize"], input[name="maxPrice"]').forEach(i => i.value = '');
+                        // reset dates to defaults: today / tomorrow
+                        const today = new Date();
+                        const tomorrow = new Date(today);
+                        tomorrow.setDate(today.getDate() + 1);
+                        const toInput = d => d.toISOString().slice(0,10);
+                        const ci = document.getElementById('checkIn');
+                        const co = document.getElementById('checkOut');
+                        if (ci) ci.value = toInput(today);
+                        if (co) co.value = toInput(tomorrow);
+
+                        // submit via AJAX
+                        form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+                    });
+                }
+            }
+        })();
+    </script>
+</body>
+</html>
+

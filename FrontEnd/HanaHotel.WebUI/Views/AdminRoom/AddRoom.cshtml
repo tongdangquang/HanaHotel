@@ -1,0 +1,182 @@
+﻿@model HanaHotel.WebUI.DTOs.RoomDTO.AddRoomDTO
+@using HanaHotel.EntityLayer.Concrete
+
+@{
+    ViewData["Title"] = "Thêm phòng";
+    Layout = "~/Views/AdminLayout/_AdminLayout.cshtml";
+}
+
+<form method="post" asp-action="AddRoom" asp-controller="AdminRoom" enctype="multipart/form-data" id="addRoomForm">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label asp-for="RoomName" class="form-label">Tiêu đề</label>
+        <input asp-for="RoomName" class="form-control" />
+        <span asp-validation-for="RoomName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label">Giá</label>
+        <input asp-for="Price" type="number" step="0.01" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Size" class="form-label">Kích thước</label>
+        <input asp-for="Size" type="number" step="0.01" class="form-control" />
+        <span asp-validation-for="Size" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="BedCount" class="form-label">Số giường</label>
+        <input asp-for="BedCount" class="form-control" />
+        <span asp-validation-for="BedCount" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">Mô tả</label>
+        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <!-- Image upload -->
+    <div class="mb-3">
+        <label class="form-label">Ảnh phòng</label>
+        <input type="file" name="Images" accept="image/*" multiple class="form-control" id="imagesInput" />
+        <div class="form-text">Bạn có thể chọn nhiều ảnh</div>
+
+        <!-- previews -->
+        <div id="imagesPreview" class="d-flex flex-wrap gap-2 mt-2"></div>
+    </div>
+
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Thêm phòng</button>
+        <a asp-controller="AdminRoom" asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        (function () {
+            const form = document.getElementById('addRoomForm');
+            const input = document.getElementById('imagesInput');
+            const preview = document.getElementById('imagesPreview');
+
+            let dt = new DataTransfer();
+            let objectUrls = [];
+
+            function isSameFile(a, b) {
+                return a.name === b.name && a.size === b.size && a.lastModified === b.lastModified;
+            }
+
+            function revokeAllUrls() {
+                objectUrls.forEach(u => { try { URL.revokeObjectURL(u); } catch {} });
+                objectUrls = [];
+            }
+
+            function removeByIndex(idx) {
+                const files = Array.from(dt.files);
+                const newDt = new DataTransfer();
+                files.forEach((f, i) => { if (i !== idx) newDt.items.add(f); });
+                dt = newDt;
+                renderPreviews();
+            }
+
+            function renderPreviews() {
+                revokeAllUrls();
+
+                preview.innerHTML = '';
+                const files = Array.from(dt.files);
+                files.forEach((file, idx) => {
+                    const url = URL.createObjectURL(file);
+                    objectUrls.push(url);
+
+                    const card = document.createElement('div');
+                    card.className = 'position-relative border rounded overflow-hidden';
+                    card.style.width = '120px';
+                    card.style.height = '90px';
+                    card.style.flex = '0 0 auto';
+
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = file.name;
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'cover';
+                    img.draggable = false;
+
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'btn btn-sm btn-danger remove-btn rounded-circle p-0';
+                    btn.dataset.index = idx;
+                    btn.style.position = 'absolute';
+                    btn.style.top = '6px';
+                    btn.style.left = '6px';
+                    btn.style.width = '26px';
+                    btn.style.height = '26px';
+                    btn.style.display = 'flex';
+                    btn.style.alignItems = 'center';
+                    btn.style.justifyContent = 'center';
+                    btn.style.zIndex = '20';
+                    btn.style.lineHeight = '1';
+                    btn.setAttribute('aria-label', 'Xóa ảnh');
+                    btn.textContent = '×';
+
+                    btn.addEventListener('click', function (ev) {
+                        ev.stopPropagation();
+                        const i = Number(this.dataset.index);
+                        removeByIndex(i);
+                    });
+
+                    card.appendChild(img);
+                    card.appendChild(btn);
+                    preview.appendChild(card);
+                });
+            }
+
+            input.addEventListener('change', function (e) {
+                const files = Array.from(e.target.files || []);
+                files.forEach(f => {
+                    const duplicate = Array.from(dt.files).some(existing => isSameFile(existing, f));
+                    if (!duplicate) dt.items.add(f);
+                });
+                renderPreviews();
+                e.target.value = null;
+            });
+
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                try {
+                    const fd = new FormData(form);
+                    fd.delete('Images');
+                    Array.from(dt.files).forEach(f => fd.append('Images', f));
+
+                    const resp = await fetch(form.action || window.location.href, {
+                        method: form.method?.toUpperCase() || 'POST',
+                        body: fd,
+                        credentials: 'same-origin'
+                    });
+
+                    if (resp.redirected) {
+                        window.location.href = resp.url;
+                        return;
+                    }
+
+                    if (resp.ok) {
+                        window.location.href = '/AdminRoom/Index' || '/AdminRoom';
+                        return;
+                    } else {
+                        let text = await resp.text();
+                        try { const json = JSON.parse(text); text = JSON.stringify(json, null, 2); } catch {}
+                        alert('Lỗi khi thêm phòng:\n' + text);
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Lỗi mạng khi gửi form. Kiểm tra console.');
+                } finally {
+                    revokeAllUrls();
+                }
+            });
+        })();
+    </script>
+}

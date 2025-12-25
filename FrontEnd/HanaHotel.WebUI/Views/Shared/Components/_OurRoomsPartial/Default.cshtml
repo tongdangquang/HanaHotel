@@ -1,0 +1,144 @@
+﻿@model List<HanaHotel.WebUI.DTOs.RoomDTO.ResultRoomDTO>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center">
+                <h6 class="section-title text-center text-primary text-uppercase">Phòng của chúng tôi</h6>
+                <h1 class="mb-5">Hiện không có phòng để hiển thị</h1>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title text-center text-primary text-uppercase">Phòng của chúng tôi</h6>
+                <h1 class="mb-5">Khám Phá <span class="text-primary text-uppercase">Các Loại Phòng</span></h1>
+            </div>
+            <div class="row g-4">
+                @foreach(var item in Model)
+                {
+
+                   
+
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="room-item shadow rounded overflow-hidden">
+                            <div class="position-relative">
+                                @{
+                                    var firstImage = item.ImagePaths?.FirstOrDefault();
+                                    var imageSrc = string.IsNullOrWhiteSpace(firstImage)
+                                    ? Url.Content("~/Hotel-html-template/img/room-placeholder.jpg")
+                                    : (firstImage.StartsWith("http")
+                                    ? firstImage
+                                    : Url.Content("~/" + firstImage.TrimStart('/')));
+                                }
+                                <img class="img-fluid"
+                                     src="@imageSrc"
+                                     alt="@item.RoomName"
+                                     style="cursor:pointer;"
+                                     onclick="location.href='@Url.Action("Detail", "Room", new { id = item.Id })'">
+                               @*  <small class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">@item.Price.ToString("N0") đ/ Đêm</small> *@
+                                <small class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">
+
+                                    @* Nếu có khuyến mại *@
+                                    @if (!string.IsNullOrEmpty(item.PromotionName) &&
+                                   (item.PromotionDiscountPercent.HasValue || item.PromotionDiscountAmount.HasValue))
+                                    {
+                                        decimal discountedPrice = item.Price;
+                                        string discountText = "";
+
+                                        if (item.PromotionDiscountPercent.HasValue && item.PromotionDiscountPercent.Value > 0)
+                                        {
+                                            discountedPrice = item.Price * (1 - item.PromotionDiscountPercent.Value / 100);
+                                            discountText = "-" + item.PromotionDiscountPercent.Value + "%";
+                                        }
+                                        else if (item.PromotionDiscountAmount.HasValue && item.PromotionDiscountAmount.Value > 0)
+                                        {
+                                            discountedPrice = item.Price - item.PromotionDiscountAmount.Value;
+                                            discountText = "-" + item.PromotionDiscountAmount.Value.ToString("N0") + " đ";
+                                        }
+
+                                        <div>
+                                            <span class="text-decoration-line-through" style="font-size: 12px;">
+                                                @item.Price.ToString("N0") đ
+                                            </span>
+                                        </div>
+                                        <div style="font-weight: bold;">
+                                            @discountedPrice.ToString("N0") đ / Đêm
+                                        </div>
+                                        <div style="font-size: 12px;">
+                                            <span class="text-warning">@discountText</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                       <span> @item.Price.ToString("N0") đ / Đêm
+                                        </span>
+                                    }
+
+                                </small>
+
+                            </div>
+                            <div class="p-4 mt-2">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <h5 class="mb-0">@item.RoomName</h5>
+                                    <div class="ps-2">
+                                        <small class="fa fa-star text-primary"></small>
+                                        <small class="fa fa-star text-primary"></small>
+                                        <small class="fa fa-star text-primary"></small>
+                                        <small class="fa fa-star text-primary"></small>
+                                        <small class="fa fa-star text-primary"></small>
+                                    </div>
+                                </div>
+                                <div class="d-flex mb-3">
+                                    <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i>@item.BedCount giường</small>
+                                    <small class="border-end me-3 pe-3"><i class="fa fa-ruler-combined text-primary me-2"></i>@item.Size m2</small>
+                                    <small>
+                                        @switch(item.Status)
+                                        {
+                                            case HanaHotel.EntityLayer.Concrete.RoomStatus.Available:
+                                                <span class="badge bg-success">Sẵn sàng</span>;
+                                                break;
+                                            case HanaHotel.EntityLayer.Concrete.RoomStatus.Reserved:
+                                                <span class="badge bg-secondary">Đã đặt</span>;
+                                                break;
+                                            case HanaHotel.EntityLayer.Concrete.RoomStatus.Occupied:
+                                                <span class="badge bg-secondary">Đang sử dụng</span>
+                                                break;
+                                            case HanaHotel.EntityLayer.Concrete.RoomStatus.Maintenance:
+                                                <span class="badge bg-warning text-dark">Bảo trì</span>;
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">Không xác định</span>;
+                                                break;
+                                        }
+                                    </small>
+                                </div>
+
+                                
+                                @* <p class="text-body mb-3">@item.Description</p> *@
+                                <div class="d-flex justify-content-between">
+                                    <a class="btn btn-sm btn-primary rounded py-2 px-4" href="@Url.Action("Detail", "Room", new { id = item.Id })">Xem chi tiết</a>
+                                    <a class="btn btn-sm btn-dark rounded py-2 px-4" href="@Url.Action("Index", "Booking", new { roomId = item.Id })">Đặt phòng ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .room-item img {
+        width: 100%;
+        height: 250px; /* chỉnh tùy bạn muốn */
+        object-fit: cover;
+        object-position: center;
+    }
+</style>
